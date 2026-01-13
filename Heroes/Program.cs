@@ -4,22 +4,24 @@ using System.Drawing;
 using System.Security.Cryptography;
 using Heroes.Map;
 using Heroes.Map.Rectangle;
+using Heroes.Menu;
+using Heroes.Menu.Unit;
 using Heroes.Players;
 using Heroes.Units;
 using Heroes.Units.Army;
 using Heroes.Units.Army.Castle;
 using Heroes.Units.Army.Rampart;
 using Heroes.Units.Heroes.Castle;
-using Heroes.Units.Menu.UnitMenu;
 using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var map = new RectangleMap(5,3);
-map.GenerateRandomObstacles(2);
+var menuFactory = new ConsoleMenuFactory(map);
 
 var player1 = SetupPlayer1(map);
 var player2 = SetupPlayer2(map);
+map.GenerateRandomObstacles(2);
 var tracker = new InitiativeTracker(player1.Army.Union(player2.Army));
 foreach (var unit in tracker)
 {
@@ -31,7 +33,16 @@ foreach (var unit in tracker)
 
     unit.Player.Activate();
     unit.Activate();
-    var menu = new ConsoleUnitMenu(map, unit.Player, unit);
+    var menuBreaker = new MenuBreaker
+    {
+        ShouldMenuBreak = false,
+    };
+    
+    var menu = menuFactory.CreateMenu(menuBreaker, 
+        new MovementUnitMenuItem(map, unit, menuFactory),
+        new AttackUnitMenuItem(map, unit, menuFactory, menuBreaker),
+        new DefenceMenuItem(unit, menuBreaker));
+
     menu.Render();
     unit.Deactivate();
     unit.Player.Deactivate();

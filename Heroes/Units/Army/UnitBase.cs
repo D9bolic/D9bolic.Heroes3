@@ -2,8 +2,6 @@
 using Heroes.Map;
 using Heroes.Players;
 using Heroes.Units.Effects;
-using Heroes.Units.Menu;
-using Heroes.Units.Menu.UnitMenu;
 using Heroes.Utils;
 
 namespace Heroes.Units.Army;

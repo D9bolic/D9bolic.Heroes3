@@ -1,51 +1,36 @@
 ﻿using Heroes.Map;
-using Heroes.Players;
-using Heroes.Units.Army;
-using Heroes.Units.Menu.UnitMenu.Actions;
 
-namespace Heroes.Units.Menu.UnitMenu;
+namespace Heroes.Menu;
 
-public class ConsoleUnitMenu
+public class ConsoleMenu : IMenu
 {
+    private readonly Func<IEnumerable<IMenuItem>> _itemsProvider;
+    private readonly IMenuBreaker _menuBreaker;
     private readonly IMap _map;
-    private readonly IPlayer _player;
-    private readonly IUnit _unit;
-    private readonly IEnumerable<ISelectableUnitAction> _actions;
-    
-    public ConsoleUnitMenu(IMap map, IPlayer player, IUnit unit)
-    {
-        _map = map;
-        _player = player;
-        _unit = unit;
-        _actions =
-        [
-            new MovementUnitAction(map, player),
-            new AttackUnitAction(map, player),
-            new DefenceUnitAction(map, player)
-        ];
-    }
 
+    public ConsoleMenu(IMap _map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
+    {
+        this._map = _map;
+        _itemsProvider = itemsProvider;
+        _menuBreaker = menuBreaker;
+    }
+    
     public void Render()
     {
-        var breaker = new UnitMenuBreaker
-        {
-            Unit = _unit,
-        };
-        
         Console.Clear();
         Console.WriteLine("\x1b[3J");
-        
-        while(!breaker.IsStopped)
+
+        while (!_menuBreaker.ShouldMenuBreak)
         {
-            var indexedItems = _actions
-                .SelectMany(x => x.GenerateMenuItems(_unit, breaker))
+            var items = _itemsProvider().Where(x => x.CanRender()).ToArray();
+            var indexedItems = items
                 .Select((item, index) => new
                 {
                     UnitMenuItem = item,
                     Number = index + 1,
                 }).ToArray();
 
-            _map.Draw();
+            _map?.Draw();
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");
@@ -63,7 +48,7 @@ public class ConsoleUnitMenu
                 Console.WriteLine("Please select action!");
             }
 
-            indexedItems.First(x => x.Number == number).UnitMenuItem.OnSelected();
+            indexedItems.First(x => x.Number == number).UnitMenuItem.Select();
             foreach (var item in indexedItems)
             {
                 item.UnitMenuItem.Dispose();
