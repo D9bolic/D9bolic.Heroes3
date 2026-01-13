@@ -3,16 +3,16 @@ using Heroes.Map;
 
 namespace Heroes.Menu.Unit;
 
-public class AttackedUnitBox : IMapItem
+public class EnemyUnitBox : IMapItem
 {
     private readonly IMapItem _item;
 
-    public AttackedUnitBox(IMapItem item)
+    public EnemyUnitBox(IMapItem item)
     {
         _item = item;
     }
 
     public Point Coordinates => _item.Coordinates;
 
-    public string Name => $"{_item.Name}:Attack";
+    public string Name => $"{_item.Name}:Enemy";
 }

@@ -4,9 +4,9 @@ using Heroes.Players;
 
 namespace Heroes.Units.Army.Castle;
 
+[Asset("Unit:Castle:Griffin", "g")]
 public class Griffin : UnitBase
 {
-    [Asset("Unit:Castle:Griffin", "g")]
     public Griffin(Point coordinates) : base("Griffin", coordinates)
     {
         StateLine = new UnitStateLine

@@ -10,7 +10,7 @@ public class ConsoleAssetStore : IConsoleAssetStore
     public ConsoleAssetStore(params Assembly[] unitAssemblies)
     {
         var units = unitAssemblies
-            .SelectMany(x => x.GetTypes())
+            .SelectMany(x => x.DefinedTypes)
             .Where(x => typeof(IUnit).IsAssignableFrom(x) && x.IsDefined(typeof(AssetAttribute)))
             .Select(x =>
             {

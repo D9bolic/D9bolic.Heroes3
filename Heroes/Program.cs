@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Drawing;
+using System.Reflection;
 using System.Security.Cryptography;
 using Heroes.Map;
 using Heroes.Map.Rectangle;
@@ -17,9 +18,9 @@ using Heroes.Utils;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var map = new RectangleMap(5,3);
-var assetStore = new ConsoleAssetStore();
+var assetStore = new ConsoleAssetStore(Assembly.GetExecutingAssembly());
 var assetManager = new ConsoleAssetManager(map, assetStore);
-var menuFactory = new ConsoleMenuFactory(map);
+//var menuFactory = new ConsoleMenuFactory(map);
 
 var player1 = SetupPlayer1();
 var player2 = SetupPlayer2();
@@ -36,12 +37,16 @@ foreach (var turn in tracker)
 
     turn.Player.Activate();
     turn.Unit.Activate();
-    var menuBreaker = new MenuBreaker
+    assetManager.DrawMap(
+        player1.Army.Select(x => new AllyUnitBox(x)).OfType<IMapItem>()
+        .Union(player2.Army.Select(x => new EnemyUnitBox(x)).OfType<IMapItem>())
+        .Union(obstacles).ToArray());
+    /*var menuBreaker = new MenuBreaker
     {
         ShouldMenuBreak = false,
     };
-    
-    /*var menu = menuFactory.CreateMenu(menuBreaker, 
+
+    var menu = menuFactory.CreateMenu(menuBreaker,
         new MovementUnitMenuItem(map, turn, menuFactory),
         new AttackUnitMenuItem(map, turn, menuFactory, menuBreaker),
         new DefenceMenuItem(turn, menuBreaker));

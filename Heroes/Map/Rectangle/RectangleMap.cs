@@ -26,8 +26,7 @@ public class RectangleMap : IMap
     }
 
     public IEnumerable<ICell> Cells => _cells;
-    
-    
+
     public IEnumerable<ICell> GetCellsInDistance(IMap map, ICell point, int distance)
     {
         var result = new List<ICell>();

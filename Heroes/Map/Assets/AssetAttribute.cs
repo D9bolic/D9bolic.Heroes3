@@ -1,5 +1,6 @@
 ﻿namespace Heroes.Map;
 
+[AttributeUsage(AttributeTargets.Class)]
 public class AssetAttribute : Attribute
 {
     public string Name { get; }

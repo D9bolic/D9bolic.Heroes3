@@ -19,7 +19,7 @@ public class ConsoleAssetManager : IAssetManager
         {
             Color = ConsoleColor.Gray,
         };
-        var columns = mapItems.Max(x => x.Coordinates.Y);
+        var columns = _map.Cells.Max(x => x.Coordinates.X) + 1;
 
         var gridColumns = Enumerable.Range(0, columns).Select(x => new Column
         {
@@ -28,15 +28,17 @@ public class ConsoleAssetManager : IAssetManager
 
         grid.Columns.Add(gridColumns);
 
-        foreach (var cell in _map.Cells)
+        foreach (var cell in _map.Cells.OrderBy(x => x.Coordinates.X).OrderBy(x => x.Coordinates.Y))
         {
             var mapItem = mapItems.FirstOrDefault(x => x.Coordinates.Equals(cell.Coordinates));
             var asset = mapItem is null
                 ? new ConsoleAsset(ConsoleColor.Gray, ConsoleColor.Black, $"({cell.Coordinates.X}, {cell.Coordinates.Y})")
                 : _consoleAssetStore.GetAsset(mapItem);
+
             grid.Children.Add(new Cell
             {
                 Color = asset.TextColor,
+                TextAlign = TextAlign.Center,
                 Background = asset.BackgroundColor,
                 Children =
                 {

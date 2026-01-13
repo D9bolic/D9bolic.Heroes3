@@ -5,9 +5,9 @@ using Heroes.Players;
 namespace Heroes.Units.Army.Rampart;
 
 
+[Asset("Unit:Rampart:Centaur", "c")]
 public class Centaur : UnitBase
 {
-    [Asset("Unit:Rampart:Centaur", "c")]
     public Centaur(Point coordinates) : base("Centaur", coordinates)
     {
         StateLine = new UnitStateLine

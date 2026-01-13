@@ -4,9 +4,9 @@ using Heroes.Players;
 
 namespace Heroes.Units.Army.Castle;
 
+[Asset("Unit:Castle:Pikeman", "p")]
 public class Pikeman : UnitBase
 {
-    [Asset("Unit:Castle:Pikeman", "p")]
     public Pikeman(Point coordinates) : base("Pikeman", coordinates)
     {
         StateLine = new UnitStateLine
