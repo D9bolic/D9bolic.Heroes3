@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Drawing;
+using System.Reflection;
+using System.Security.Cryptography;
 using Heroes.Map;
 using Heroes.Players;
 using Heroes.Units.Effects;
@@ -6,55 +8,30 @@ using Heroes.Utils;
 
 namespace Heroes.Units.Army;
 
-public abstract class UnitBase : MovableMapItemBase, IUnit, IDisposable
+public abstract class UnitBase : IMapItem, IUnit
 {
-    private readonly UnitStateLine _unitStateLine;
-    
-    protected UnitBase(IPlayer player, string literal, string name)
-        : base(literal, name)
+    private readonly string _name;
+    private readonly string _assetBucket;
+    protected readonly UnitStateLine _unitStateLine;
+
+    protected UnitBase(string name, Point coordinates)
     {
-        Player = player;
-        player.Army.Add(this);
+        _name = name;
+        Coordinates = coordinates;
         LongEffects = new LongEffectsList();
     }
-
+    
+    public Point Coordinates { get; }
     protected virtual int CounterAttacks { get; set; } = 1;
 
     public int Wounds { get; set; }
-
-    public IMap Map { get; set; }
-
-    public IPlayer Player { get; }
-
-
-    public override ICell? Cell
-    {
-        get => _cell;
-        set
-        {
-            if (_cell is not null)
-            {
-                _cell.PlacedItem = null;
-            }
-
-            _cell = value;
-            
-            if (value is not null)
-            {
-                value.PlacedItem = this;
-            }
-        }
-    }
 
     public UnitStateLine StateLine
     {
         get
         {
-            var mutated = LongEffects
+            return LongEffects
                 .Aggregate(_unitStateLine, (current, effect) => effect.Mutate(current));
-
-            return Player.Hero.Abilities
-                .Aggregate(mutated, (current, effect) => effect.Mutate(current));
         }
 
         protected init => _unitStateLine = value;
@@ -66,15 +43,19 @@ public abstract class UnitBase : MovableMapItemBase, IUnit, IDisposable
 
     public int HitPoints => StateLine.HitPoints - Wounds;
 
+    public string Name => _name;
+    
+    string IMapItem.Name => this.GetType().GetCustomAttribute<AssetAttribute>()!.Name;
+    
     public void Activate()
     {
-        if(_cell is null || HitPoints <= 0)
+        if(HitPoints <= 0)
         {
             return;
         }
         
         LongEffects.CheckTurn();
-        Console.WriteLine($"Active creature: {Name}");
+        Console.WriteLine($"Active creature: {_name}");
         Console.WriteLine($"Active effects");
         foreach (var effect in LongEffects)
         {
@@ -82,64 +63,27 @@ public abstract class UnitBase : MovableMapItemBase, IUnit, IDisposable
         }
  
         StateLine.ToConsole();
-        _cell.BackgroundColor = ConsoleColor.Green;
-        _cell.TextColor = ConsoleColor.Black;
+        //_cell.BackgroundColor = ConsoleColor.Green;
+        //_cell.TextColor = ConsoleColor.Black;
 
         CounterAttacks = 1;
         MovementLeft = StateLine.Speed;
     }
-    
-    public void Deactivate()
-    {
-        if(_cell is null || HitPoints <= 0)
-        {
-            return;
-        }
-
-        _cell.BackgroundColor = ConsoleColor.Black;
-    }
-
-    public void MarkAsAlly()
-    {
-        if(_cell is null || HitPoints <= 0)
-        {
-            return;
-        }
-
-        _cell.TextColor = ConsoleColor.Green;
-        _cell.BackgroundColor = ConsoleColor.Black;
-    }
-
-    public void MarkAsEnemy()
-    {
-        if(_cell is null || HitPoints <= 0)
-        {
-            return;
-        }
-
-        _cell.TextColor = ConsoleColor.Red;
-        _cell.BackgroundColor = ConsoleColor.Black;
-    }
 
     public void CounterAttack(IUnit target)
     {
-        if (HitPoints <= 0 || CounterAttacks <= 0 || !Cell.IsInDistance(target.Cell, StateLine.AttackRange))
+        if (HitPoints <= 0 || CounterAttacks <= 0)
         {
             return;
         }
 
-        Console.WriteLine($"{this.Name} counter attack {target.Name}");
+        Console.WriteLine($"{this._name} counter attack {target.Name}");
         target.Defence(this);
         CounterAttacks--;
     }
 
     public void Defence(IUnit attacker)
     {
-        if (!attacker.Cell.IsInDistance(Cell, attacker.StateLine.AttackRange))
-        {
-            return;
-        }
-        
         var different = attacker.StateLine.Attack - this.StateLine.Defence;
         var damage = RandomNumberGenerator.GetInt32(attacker.StateLine.DamageMin, attacker.StateLine.DamageMax);
         if (different > 0)
@@ -147,28 +91,21 @@ public abstract class UnitBase : MovableMapItemBase, IUnit, IDisposable
             damage = (int)Math.Round(damage + (different * damage * 0.1));
         }
         
-        Console.WriteLine($"{attacker.Name} attacking {this.Name} with damage {damage}");
+        Console.WriteLine($"{attacker.Name} attacking {_name} with damage {damage}");
         this.Wounds += damage;
         if (HitPoints <= 0)
         {
-            Console.WriteLine( $"{Name} is dead");
-            Dispose();
+            Console.WriteLine( $"{_name} is dead");
         }
         else
         {
-            Console.WriteLine($"{Name} {HitPoints} hit points left");
+            Console.WriteLine($"{_name} {HitPoints} hit points left");
             
         }
     }
 
-    public virtual bool CanMove(ICell cell)
+    public virtual bool CanFly()
     {
-        return cell.PlacedItem is ILandscape landscape && landscape.IsPointToMove;
-    }
-
-    public void Dispose()
-    {
-        Player.Army.Remove(this);
-        Cell = null;
+        return false;
     }
 }

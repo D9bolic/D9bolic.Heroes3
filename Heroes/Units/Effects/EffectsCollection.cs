@@ -1,6 +1,6 @@
 ﻿namespace Heroes.Units.Effects;
 
-public class LongEffectsList : List<ILongEffect>
+public class LongEffectsList : List<IEffect>
 {
     public void CheckTurn()
     {

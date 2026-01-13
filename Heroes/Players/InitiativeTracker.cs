@@ -4,21 +4,25 @@ using Heroes.Units.Army;
 
 namespace Heroes.Players;
 
+public record CurrentTurn(IUnit Unit, IPlayer Player);
+
 public class InitiativeTracker : IInitiativeTracker
 {
-    private readonly IEnumerable<IUnit> _units;
+    private readonly IEnumerable<CurrentTurn> _units;
 
-    public InitiativeTracker(IEnumerable<IUnit> units)
+    public InitiativeTracker(params IPlayer[] players)
     {
-        _units = units.OrderBy(x => x.StateLine.Initiative).ToArray();
+        _units = players
+            .SelectMany(p => p.Army.Select(u => new CurrentTurn(u, p)))
+            .OrderBy(x => x.Unit.StateLine.Initiative).ToArray();
     }
 
-    public IEnumerator<IUnit> GetEnumerator()
+    public IEnumerator<CurrentTurn> GetEnumerator()
     {
         for (var i = 0; i < _units.Count(); i++)
         {
             var unit = _units.ElementAt(i);
-            if (unit.HitPoints <= 0 || unit.Cell is null)
+            if (unit.Unit.HitPoints <= 0)
             {
                 continue;
             }

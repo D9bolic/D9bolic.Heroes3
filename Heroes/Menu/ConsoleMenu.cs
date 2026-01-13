@@ -6,11 +6,11 @@ public class ConsoleMenu : IMenu
 {
     private readonly Func<IEnumerable<IMenuItem>> _itemsProvider;
     private readonly IMenuBreaker _menuBreaker;
-    private readonly IMap _map;
+    private readonly IAssetManager _map;
 
-    public ConsoleMenu(IMap _map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
+    public ConsoleMenu(IAssetManager map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
     {
-        this._map = _map;
+        _map = map;
         _itemsProvider = itemsProvider;
         _menuBreaker = menuBreaker;
     }
@@ -30,7 +30,7 @@ public class ConsoleMenu : IMenu
                     Number = index + 1,
                 }).ToArray();
 
-            _map?.Draw();
+            _map.Draw();
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");

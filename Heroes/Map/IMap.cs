@@ -8,9 +8,5 @@ namespace Heroes.Map;
 
 public interface IMap
 {
-    void Draw();
-    
-    void PlaceUnit(IUnit unit, Point coordinates);
-
     IEnumerable<ICell> Cells { get; }
 }

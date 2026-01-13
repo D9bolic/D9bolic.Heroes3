@@ -15,20 +15,8 @@ public class Player : IPlayer
     public void Activate()
     {
         Console.WriteLine($"Player {Name} turn");
-        foreach (var unit in Army)
-        {
-            unit.MarkAsAlly();
-        }
     }
-
-    public void Deactivate()
-    {
-        foreach (var unit in Army)
-        {
-            unit.MarkAsEnemy();
-        }
-    }
-
+    
     public bool CheckLoose()
     {
         return !Army.Any();

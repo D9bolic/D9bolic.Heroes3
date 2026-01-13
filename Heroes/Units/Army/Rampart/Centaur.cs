@@ -1,10 +1,14 @@
-﻿using Heroes.Players;
+﻿using System.Drawing;
+using Heroes.Map;
+using Heroes.Players;
 
 namespace Heroes.Units.Army.Rampart;
 
+
 public class Centaur : UnitBase
 {
-    public Centaur(IPlayer player) : base(player, "c", "Centaur")
+    [Asset("Unit:Rampart:Centaur", "c")]
+    public Centaur(Point coordinates) : base("Centaur", coordinates)
     {
         StateLine = new UnitStateLine
         {

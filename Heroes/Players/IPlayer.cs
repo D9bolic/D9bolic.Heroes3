@@ -13,8 +13,6 @@ public interface IPlayer
     public List<IUnit> Army { get; }
 
     void Activate();
-
-    void Deactivate();
     
     bool CheckLoose();
 }

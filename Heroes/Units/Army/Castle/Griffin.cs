@@ -1,11 +1,13 @@
-﻿using Heroes.Map;
+﻿using System.Drawing;
+using Heroes.Map;
 using Heroes.Players;
 
 namespace Heroes.Units.Army.Castle;
 
 public class Griffin : UnitBase
 {
-    public Griffin(IPlayer player) : base(player, "g", "Griffin")
+    [Asset("Unit:Castle:Griffin", "g")]
+    public Griffin(Point coordinates) : base("Griffin", coordinates)
     {
         StateLine = new UnitStateLine
         {
@@ -19,8 +21,8 @@ public class Griffin : UnitBase
             DamageMax = 6,
         };
     }
-    public override bool CanMove(ICell cell)
+    public override bool CanFly()
     {
-        return cell.PlacedItem is ILandscape;
+        return true;
     }
 }

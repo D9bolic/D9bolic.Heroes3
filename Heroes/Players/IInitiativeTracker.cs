@@ -3,7 +3,7 @@ using Heroes.Units.Army;
 
 namespace Heroes.Players;
 
-public interface IInitiativeTracker : IEnumerable<IUnit>
+public interface IInitiativeTracker : IEnumerable<CurrentTurn>
 {
     
 }

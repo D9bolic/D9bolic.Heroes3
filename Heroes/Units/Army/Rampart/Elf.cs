@@ -1,10 +1,13 @@
-﻿using Heroes.Players;
+﻿using System.Drawing;
+using Heroes.Map;
+using Heroes.Players;
 
 namespace Heroes.Units.Army.Rampart;
 
+[Asset("Unit:Rampart:Elf", "e")]
 public class Elf : UnitBase
 {
-    public Elf(IPlayer player) : base(player, "e", "Elf")
+    public Elf(Point coordinates) : base("Elf", coordinates)
     {
         StateLine = new UnitStateLine
         {
