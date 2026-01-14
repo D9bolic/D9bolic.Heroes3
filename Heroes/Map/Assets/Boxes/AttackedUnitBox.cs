@@ -3,16 +3,10 @@ using Heroes.Map;
 
 namespace Heroes.Menu.Unit;
 
-public class AttackedUnitBox : IMapItem
+public class AttackedUnitBox(IMapItem item) : WrapperBase(item)
 {
-    private readonly IMapItem _item;
-
-    public AttackedUnitBox(IMapItem item)
+    protected override string GetName(IMapItem item)
     {
-        _item = item;
+        return $"{item.Name}:Attack";
     }
-
-    public Point Coordinates => _item.Coordinates;
-
-    public string Name => $"{_item.Name}:Attack";
 }

@@ -1,6 +1,8 @@
-﻿namespace Heroes.Menu;
+﻿using Heroes.Map;
+
+namespace Heroes.Menu;
 
 public interface IMenu
 {
-    void Render();
+    void Render(Func<TurnInformation> turnInformationProvider);
 }

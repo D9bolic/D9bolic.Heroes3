@@ -2,7 +2,7 @@
 
 namespace Heroes.Map.Rectangle;
 
-public class RectangleCell : ICell
+public class RectangleCell : IMapItem
 {
     public RectangleCell(Point coordinates)
     {
@@ -10,4 +10,6 @@ public class RectangleCell : ICell
     }
 
     public Point Coordinates { get; }
+
+    public string Name => "Empty";
 }

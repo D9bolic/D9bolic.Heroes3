@@ -24,7 +24,7 @@ public class RectangleMap : IMap
         }
     }
 
-    public IEnumerable<ICell> Cells => _cells;
+    public IEnumerable<IMapItem> Cells => _cells;
 
     public void Draw(IEnumerable<IMapItem> mapItems)
     {
@@ -35,7 +35,7 @@ public class RectangleMap : IMap
                 var coordinate = new Point(column, row);
                 var mapItem = mapItems.FirstOrDefault(x => x.Coordinates.Equals(coordinate));
                 var asset = mapItem is null
-                    ? _assetsStore.GetAsset(new EmptyMapItem())
+                    ? _assetsStore.GetAsset(_cells.First(x => x.Coordinates.Equals(coordinate)))
                     : _assetsStore.GetAsset(mapItem);
                 
                 asset.Draw();
@@ -45,10 +45,10 @@ public class RectangleMap : IMap
         }
     }
 
-    public IEnumerable<ICell> GetCellsInDistance(IMap map, ICell point, int distance)
+    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance)
     {
-        var result = new List<ICell>();
-        foreach (var cell in map.Cells)
+        var result = new List<IMapItem>();
+        foreach (var cell in Cells)
         {
             if (IsInDistance(cell, point, distance))
             {
@@ -59,37 +59,37 @@ public class RectangleMap : IMap
         return result;
     }
     
-    public static bool IsInDistance(ICell cell, ICell point, int distance)
+    public static bool IsInDistance(IMapItem cell, Point Coordinates, int distance)
     {
-        if (cell.Coordinates.X > point.Coordinates.X && cell.Coordinates.Y > point.Coordinates.Y)
+        if (cell.Coordinates.X > Coordinates.X && cell.Coordinates.Y > Coordinates.Y)
         {
             return false;
         }
 
-        if (cell.Coordinates.X > point.Coordinates.X &&
-            cell.Coordinates.X <= point.Coordinates.X + distance &&
-            cell.Coordinates.Y == point.Coordinates.Y)
+        if (cell.Coordinates.X > Coordinates.X &&
+            cell.Coordinates.X <= Coordinates.X + distance &&
+            cell.Coordinates.Y == Coordinates.Y)
         {
             return true;
         }
 
-        if (cell.Coordinates.X < point.Coordinates.X &&
-            cell.Coordinates.X >= point.Coordinates.X - distance &&
-            cell.Coordinates.Y == point.Coordinates.Y)
+        if (cell.Coordinates.X < Coordinates.X &&
+            cell.Coordinates.X >= Coordinates.X - distance &&
+            cell.Coordinates.Y == Coordinates.Y)
         {
             return true;
         }
 
-        if (cell.Coordinates.Y > point.Coordinates.Y &&
-            cell.Coordinates.Y <= point.Coordinates.Y + distance &&
-            cell.Coordinates.X == point.Coordinates.X)
+        if (cell.Coordinates.Y > Coordinates.Y &&
+            cell.Coordinates.Y <= Coordinates.Y + distance &&
+            cell.Coordinates.X == Coordinates.X)
         {
             return true;
         }
 
-        if (cell.Coordinates.Y < point.Coordinates.Y &&
-            cell.Coordinates.Y >= point.Coordinates.Y - distance &&
-            cell.Coordinates.X == point.Coordinates.X)
+        if (cell.Coordinates.Y < Coordinates.Y &&
+            cell.Coordinates.Y >= Coordinates.Y - distance &&
+            cell.Coordinates.X == Coordinates.X)
         {
             return true;
         }

@@ -10,5 +10,5 @@ public interface IDrawableItem
 
 public interface IMapItem : IDrawableItem
 {
-    public Point Coordinates { get; }
+    public Point Coordinates { get; set; }
 }

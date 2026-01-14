@@ -6,16 +6,16 @@ public class ConsoleMenu : IMenu
 {
     private readonly Func<IEnumerable<IMenuItem>> _itemsProvider;
     private readonly IMenuBreaker _menuBreaker;
-    private readonly IAssetManager _map;
+    private readonly IMap _map;
 
-    public ConsoleMenu(IAssetManager map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
+    public ConsoleMenu(IMap map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
     {
         _map = map;
         _itemsProvider = itemsProvider;
         _menuBreaker = menuBreaker;
     }
     
-    public void Render()
+    public void Render(Func<TurnInformation> turnInformationProvider)
     {
         Console.Clear();
         Console.WriteLine("\x1b[3J");
@@ -30,7 +30,7 @@ public class ConsoleMenu : IMenu
                     Number = index + 1,
                 }).ToArray();
 
-            _map.Draw();
+            _map.Draw(turnInformationProvider().Elements);
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");
@@ -49,10 +49,6 @@ public class ConsoleMenu : IMenu
             }
 
             indexedItems.First(x => x.Number == number).UnitMenuItem.Select();
-            foreach (var item in indexedItems)
-            {
-                item.UnitMenuItem.Dispose();
-            }
         }
     }
 }

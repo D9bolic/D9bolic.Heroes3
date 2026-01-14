@@ -4,7 +4,7 @@ namespace Heroes.Menu.Unit;
 
 public interface IWrapper : IMapItem
 {
-    IMapItem Wrap();
-    
-    void Unwrap();
+    IMapItem Item { get; }
+
+    IMapItem Unwrap();
 }

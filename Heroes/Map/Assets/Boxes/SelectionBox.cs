@@ -3,16 +3,10 @@ using Heroes.Map;
 
 namespace Heroes.Menu.Unit;
 
-public class SelectionBox : IMapItem
+public class SelectionBox(IMapItem item) : WrapperBase(item)
 {
-    private readonly IMapItem _item;
-
-    public SelectionBox(IMapItem item)
+    protected override string GetName(IMapItem item)
     {
-        _item = item;
+        return $"{item.Name}:Selection";
     }
-
-    public Point Coordinates => _item.Coordinates;
-
-    public string Name => $"{_item.Name}:Selection";
 }

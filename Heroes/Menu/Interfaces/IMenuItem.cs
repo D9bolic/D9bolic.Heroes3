@@ -1,6 +1,6 @@
 ﻿namespace Heroes.Menu;
 
-public interface IMenuItem : IDisposable
+public interface IMenuItem
 {
     bool CanRender();
 
