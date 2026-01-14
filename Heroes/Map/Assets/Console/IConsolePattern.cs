@@ -5,14 +5,6 @@ public interface IConsolePattern
     IAsset Wrap(ConsoleAsset asset);
 }
 
-public class RectanglePattern : IConsolePattern
-{
-    public IAsset Wrap(ConsoleAsset asset)
-    {
-        return new RectangleConsoleAsset(asset);
-    }
-}
-
 public class RectangleConsoleAsset(ConsoleAsset asset)
     : ConsoleAssetBase, IAsset
 {
@@ -32,8 +24,6 @@ public class RectangleConsoleAsset(ConsoleAsset asset)
         asset.Draw();
         Console.Write($"│");
 
-        SetCursorPosition(origCol, origRow + 2);
-        Console.Write("└─┘");
         SetCursorPosition(origCol, origRow + 2);
         Console.Write("└─┘");
         
