@@ -7,12 +7,12 @@ public class DefenceMenuItem : IMenuItem
 {
     private readonly IMenuBreaker _breaker;
     
-    public IUnit Unit { get; }
+    public TurnInformation Turn { get; }
 
-    public DefenceMenuItem(IUnit unit, IMenuBreaker breaker)
+    public DefenceMenuItem(TurnInformation turn, IMenuBreaker breaker)
     {
         _breaker = breaker;
-        Unit = unit;
+        Turn = turn;
     }
 
     public bool CanRender() => true;
@@ -24,7 +24,7 @@ public class DefenceMenuItem : IMenuItem
 
     public void Select()
     {
-        Unit.LongEffects.Add(new Defence
+        Turn.ActiveUnit.LongEffects.Add(new Defence
         {
             TurnsLeft = 1,
         });

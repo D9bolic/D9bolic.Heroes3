@@ -4,5 +4,5 @@ namespace Heroes.Menu;
 
 public interface IMenu
 {
-    void Render(Func<TurnInformation> turnInformationProvider);
+    void Render(TurnInformation turnInformationProvider);
 }

@@ -32,7 +32,7 @@ public class ConsoleAssetsStore : IAssetsStore
     private void SetupLandscape(string name, string literal)
     {
         _inMemoryStore.Add($"{name}", _consolePattern.Wrap(new ConsoleAsset(ConsoleColor.Yellow, ConsoleColor.Black, literal)));
-        _inMemoryStore.Add($"{name}:Selection", _consolePattern.Wrap(new ConsoleAsset(ConsoleColor.Green, ConsoleColor.Black, literal)));
+        _inMemoryStore.Add($"{name}:Selection", _consolePattern.Wrap(new ConsoleAsset(ConsoleColor.Black, ConsoleColor.Green, literal)));
     }
 
     public IAsset GetAsset(IDrawableItem item)

@@ -18,7 +18,7 @@ public abstract class UnitBase : IMapItem, IUnit
         LongEffects = new LongEffectsList();
     }
     
-    public Point Coordinates { get; }
+    public Point Coordinates { get; set; }
     protected virtual int CounterAttacks { get; set; } = 1;
 
     public int Wounds { get; set; }

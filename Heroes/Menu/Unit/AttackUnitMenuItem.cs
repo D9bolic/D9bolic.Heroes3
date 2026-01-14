@@ -7,16 +7,14 @@ namespace Heroes.Menu.Unit;
 
 public class AttackUnitMenuItem : IMenuItem
 {
-    private readonly IMap _map;
-    private readonly IUnit _unit;
+    private readonly TurnInformation _turn;
     private readonly IMenuFactory _menuFactory;
     private readonly IMenuBreaker _unitMenuBreaker;
     private IMenu _menu;
 
-    public AttackUnitMenuItem(IMap map, IUnit unit, IMenuFactory menuFactory, IMenuBreaker unitMenuBreaker)
+    public AttackUnitMenuItem(TurnInformation _turn, IMenuFactory menuFactory, IMenuBreaker unitMenuBreaker)
     {
-        _map = map;
-        _unit = unit;
+        this._turn = _turn;
         _menuFactory = menuFactory;
         _unitMenuBreaker = unitMenuBreaker;
     }
@@ -27,9 +25,7 @@ public class AttackUnitMenuItem : IMenuItem
 
     public bool CanRender()
     {
-        return _map
-            .GetEnemies(_unit.Cell, _unit.StateLine.AttackRange, _unit.Player)
-            .Any();
+        return GetEnemiesInAttackRange().Any();
     }
 
     public string Render()
@@ -39,10 +35,30 @@ public class AttackUnitMenuItem : IMenuItem
 
     public void Select()
     {
-        _menu = _menuFactory.CreateMenu(_unitMenuBreaker, () => _map
-            .GetEnemies(_unit.Cell, _unit.StateLine.AttackRange, _unit.Player)
-            .Select(x => new AttackSelectionUnitMenuItem(x, _unit, _unitMenuBreaker))
-            .ToArray());
-        _menu.Render();
+        var enemies = GetEnemiesInAttackRange();
+        
+        _menu = _menuFactory.CreateMenu(_unitMenuBreaker, enemies
+                .Select<IMapItem, IMenuItem>(x => new AttackSelectionUnitMenuItem(x, _turn.ActiveUnit, _unitMenuBreaker)).ToArray());
+        
+        _menu.Render(new TurnInformation()
+        {
+            Allies = _turn.Allies,
+            Enemies = _turn.Enemies,
+            ActiveUnit = _turn.ActiveUnit,
+            Map = _turn.Map,
+            Obstacles = _turn.Obstacles,
+            ExtraObjects = enemies,
+        });
+    }
+    
+    private IEnumerable<IMapItem> GetEnemiesInAttackRange()
+    {
+        var cells = _turn.Map
+            .GetCellsInDistance(_turn.ActiveUnit.Coordinates, _turn.ActiveUnit.StateLine.AttackRange)
+            .Select(x => x.Coordinates)
+            .ToArray();
+        return _turn.Enemies
+            .Where(u => cells.Contains(u.Coordinates))
+            .ToArray();
     }
 }

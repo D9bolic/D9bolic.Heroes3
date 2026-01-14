@@ -40,9 +40,16 @@ foreach (var turn in tracker)
     {
         ShouldMenuBreak = false,
     };
-    var enemyPlayer = player1 == turn.Player ? player1 : player2;
-    var allyArmy = turn.Player.Army.Select<IUnit, IMapItem>(x => x == turn.Unit ? new SelectionBox(x) : new AllyUnitBox(x)).ToArray();
-    var enemyArmy = enemyPlayer.Army.Select<IUnit, IMapItem>(x => new EnemyUnitBox(x)).ToArray();
+    var enemyPlayer = player1 == turn.Player ? player2 : player1;
+    var allyArmy = turn
+        .Player
+        .Army
+        .Select<IUnit, IMapItem>(x => x == turn.Unit 
+            ? new SelectionBox(x)
+            : new AllyUnitBox(x)).ToArray();
+    var enemyArmy = enemyPlayer
+        .Army
+        .Select<IUnit, IMapItem>(x => new EnemyUnitBox(x)).ToArray();
     
     var turnInformation = new TurnInformation
     {
@@ -54,10 +61,10 @@ foreach (var turn in tracker)
     };
     var menu = menuFactory.CreateMenu(menuBreaker,
         new MovementUnitMenuItem(turnInformation, menuFactory),
-       // new AttackUnitMenuItem(turnInformation, menuFactory, menuBreaker),
-      //  new DefenceMenuItem(turnInformation, menuBreaker));
+        new AttackUnitMenuItem(turnInformation, menuFactory, menuBreaker),
+        new DefenceMenuItem(turnInformation, menuBreaker));
 
-    menu.Render(() => turnInformation);
+    menu.Render(turnInformation);
 }
 
 IPlayer SetupPlayer1()

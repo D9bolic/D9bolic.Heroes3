@@ -9,7 +9,7 @@ public class Rock : IMapItem
         Coordinates = coordinates;
     }
 
-    public Point Coordinates { get; }
+    public Point Coordinates { get; set; }
     
     public string Name => "Rock";
 }

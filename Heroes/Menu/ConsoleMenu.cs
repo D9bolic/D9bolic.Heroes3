@@ -4,25 +4,25 @@ namespace Heroes.Menu;
 
 public class ConsoleMenu : IMenu
 {
-    private readonly Func<IEnumerable<IMenuItem>> _itemsProvider;
+    private readonly IEnumerable<IMenuItem> _itemsProvider;
     private readonly IMenuBreaker _menuBreaker;
     private readonly IMap _map;
 
-    public ConsoleMenu(IMap map, Func<IEnumerable<IMenuItem>> itemsProvider, IMenuBreaker menuBreaker)
+    public ConsoleMenu(IMap map, IEnumerable<IMenuItem> itemsProvider, IMenuBreaker menuBreaker)
     {
         _map = map;
         _itemsProvider = itemsProvider;
         _menuBreaker = menuBreaker;
     }
-    
-    public void Render(Func<TurnInformation> turnInformationProvider)
+
+    public void Render(TurnInformation turnInformationProvider)
     {
         Console.Clear();
         Console.WriteLine("\x1b[3J");
 
-        while (!_menuBreaker.ShouldMenuBreak)
+        do
         {
-            var items = _itemsProvider().Where(x => x.CanRender()).ToArray();
+            var items = _itemsProvider.Where(x => x.CanRender()).ToArray();
             var indexedItems = items
                 .Select((item, index) => new
                 {
@@ -30,7 +30,7 @@ public class ConsoleMenu : IMenu
                     Number = index + 1,
                 }).ToArray();
 
-            _map.Draw(turnInformationProvider().Elements);
+            _map.Draw(turnInformationProvider.Elements);
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");
@@ -49,6 +49,6 @@ public class ConsoleMenu : IMenu
             }
 
             indexedItems.First(x => x.Number == number).UnitMenuItem.Select();
-        }
+        } while (!_menuBreaker.ShouldMenuBreak);
     }
 }

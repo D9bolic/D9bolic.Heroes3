@@ -6,42 +6,31 @@ namespace Heroes.Menu.Unit;
 public class AttackSelectionUnitMenuItem : IMenuItem
 {
     private readonly IMenuBreaker _breaker;
-    private readonly ConsoleColor _previousTextColor;
-    private readonly ConsoleColor _previousBackgroundColor;
         
-    public ICell Cell { get; }
+    public IMapItem Enemy { get; }
     
     public IUnit Unit { get; }
 
-    public AttackSelectionUnitMenuItem(ICell Cell, IUnit unit, IMenuBreaker breaker)
+    public AttackSelectionUnitMenuItem(IMapItem enemy, IUnit unit, IMenuBreaker breaker)
     {
         _breaker = breaker;
-        this.Cell = Cell;
+        this.Enemy = enemy;
         Unit = unit;
-        _previousTextColor = Cell.TextColor;
-        _previousBackgroundColor = Cell.BackgroundColor;
-        Cell.BackgroundColor = ConsoleColor.Red;
-        Cell.TextColor = ConsoleColor.Black;
     }
 
     public bool CanRender() => true;
 
     public string Render()
     {
-        return $"Attack unit {Cell.PlacedItem!.Name} on cell {Cell.Coordinates.X}, {Cell.Coordinates.Y}";
+        return $"Attack unit {Enemy.Name} on cell {Enemy.Coordinates.X}, {Enemy.Coordinates.Y}";
     }
 
     public void Select()
     {
-        (Cell.PlacedItem as IUnit)!.Defence(Unit);
-        (Cell.PlacedItem as IUnit)!.CounterAttack(Unit);
+        var enemy = Enemy is IUnit unit ? unit : (IUnit)(((IWrapper) Enemy).Item);
+        enemy!.Defence(Unit);
+        enemy!.CounterAttack(Unit);
         Console.ReadKey();
         _breaker.ShouldMenuBreak = true;
-    }
-
-    public void Dispose()
-    {
-        Cell.BackgroundColor = _previousBackgroundColor;
-        Cell.TextColor = _previousTextColor;
     }
 }

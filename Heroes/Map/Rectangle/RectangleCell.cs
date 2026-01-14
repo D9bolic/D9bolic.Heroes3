@@ -9,7 +9,7 @@ public class RectangleCell : IMapItem
         Coordinates = coordinates;
     }
 
-    public Point Coordinates { get; }
+    public Point Coordinates { get; set; }
 
     public string Name => "Empty";
 }

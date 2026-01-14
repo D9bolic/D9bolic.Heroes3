@@ -23,7 +23,7 @@ public class MovementUnitMenuItem : IMenuItem
 
     public bool CanRender()
     {
-        return GetSuitableCells().Any();
+        return GetSuitableCells().Any() && _turn.ActiveUnit.MovementLeft > 0;
     }
 
     public string Render()
@@ -33,28 +33,25 @@ public class MovementUnitMenuItem : IMenuItem
 
     public void Select()
     {
+        var cells = GetSuitableCells();
         var menuBreaker = new MenuBreaker
         {
-            ShouldMenuBreak = false,
+            ShouldMenuBreak = true,
         };
-        
-        Func<IEnumerable<IMenuItem>> itemsProvider = () =>
-            GetSuitableCells()
-                .Select<IMapItem, IMenuItem>(x => new MovementCellSelectionMenuItem(x, _turn.ActiveUnit, menuBreaker))
-                .Union(new[] {new ExitMenuItem(menuBreaker)})
-                .ToArray();
-        Func<TurnInformation> turnInformationProvider = () =>
-            new TurnInformation()
-            {
-                Allies = _turn.Allies,
-                Enemies = _turn.Enemies,
-                ActiveUnit = _turn.ActiveUnit,
-                Map = _turn.Map,
-                Obstacles = _turn.Obstacles.Union(GetSuitableCells().Select(x => new SelectionBox(x))).ToArray(),
-            };
 
-        _menu = _menuFactory.CreateMenu(menuBreaker, itemsProvider);
-        _menu.Render(turnInformationProvider);
+        _menu = _menuFactory.CreateMenu(menuBreaker, cells
+            .Select<IMapItem, IMenuItem>(x => new MovementCellSelectionMenuItem(x, _turn.ActiveUnit, menuBreaker))
+            .Union(new[] {new ExitMenuItem(menuBreaker)})
+            .ToArray());
+        _menu.Render(new TurnInformation()
+        {
+            Allies = _turn.Allies,
+            Enemies = _turn.Enemies,
+            ActiveUnit = _turn.ActiveUnit,
+            Map = _turn.Map,
+            Obstacles = _turn.Obstacles,
+            ExtraObjects = cells.Select(x => new SelectionBox(x)).ToArray(),
+        });
     }
 
     private IEnumerable<IMapItem> GetSuitableCells()
