@@ -1,10 +1,7 @@
 ﻿using System.Drawing;
-using System.Reflection;
 using System.Security.Cryptography;
 using Heroes.Map;
-using Heroes.Players;
 using Heroes.Units.Effects;
-using Heroes.Utils;
 
 namespace Heroes.Units.Army;
 
@@ -45,7 +42,7 @@ public abstract class UnitBase : IMapItem, IUnit
 
     public string Name => _name;
     
-    string IMapItem.Name => this.GetType().GetCustomAttribute<AssetAttribute>()!.Name;
+    string IDrawableItem.Name => GetType().Name;
     
     public void Activate()
     {

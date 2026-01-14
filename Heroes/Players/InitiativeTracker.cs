@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Heroes.Units;
 using Heroes.Units.Army;
 
 namespace Heroes.Players;

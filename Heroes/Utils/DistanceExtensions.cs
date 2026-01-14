@@ -1,9 +1,6 @@
-﻿using System.Drawing;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Heroes.Map;
 using Heroes.Map.Landscape;
-using Heroes.Players;
-using Heroes.Units.Army;
 
 namespace Heroes.Utils;
 

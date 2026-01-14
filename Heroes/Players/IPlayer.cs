@@ -1,5 +1,4 @@
-﻿using Heroes.Units;
-using Heroes.Units.Army;
+﻿using Heroes.Units.Army;
 using Heroes.Units.Heroes;
 
 namespace Heroes.Players;

@@ -1,10 +1,7 @@
 ﻿using System.Drawing;
-using Heroes.Map;
-using Heroes.Players;
 
 namespace Heroes.Units.Army.Castle;
 
-[Asset("Unit:Castle:Pikeman", "p")]
 public class Pikeman : UnitBase
 {
     public Pikeman(Point coordinates) : base("Pikeman", coordinates)

@@ -1,7 +1,4 @@
-﻿using Alba.CsConsoleFormat;
-using Heroes.Units;
-using Heroes.Units.Army;
-using Point = System.Drawing.Point;
+﻿using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;
 
@@ -10,11 +7,13 @@ public class RectangleMap : IMap
     private readonly int _columns;
     private readonly int _rows;
     private readonly List<RectangleCell> _cells = new List<RectangleCell>();
+    private readonly IAssetsStore _assetsStore;
 
-    public RectangleMap(int columns, int rows)
+    public RectangleMap(int columns, int rows, IAssetsStore assetsStore)
     {
         _columns = columns;
         _rows = rows;
+        _assetsStore = assetsStore;
 
         for (var row = 0; row < _rows; row++)
         {
@@ -26,6 +25,25 @@ public class RectangleMap : IMap
     }
 
     public IEnumerable<ICell> Cells => _cells;
+
+    public void Draw(IEnumerable<IMapItem> mapItems)
+    {
+        for (var row = 0; row < _rows; row++)
+        {
+            for (var column = 0; column < _columns; column++)
+            {
+                var coordinate = new Point(column, row);
+                var mapItem = mapItems.FirstOrDefault(x => x.Coordinates.Equals(coordinate));
+                var asset = mapItem is null
+                    ? _assetsStore.GetAsset(new EmptyMapItem())
+                    : _assetsStore.GetAsset(mapItem);
+                
+                asset.Draw();
+            }
+
+            _assetsStore.GetAsset(new NewLineItem()).Draw();
+        }
+    }
 
     public IEnumerable<ICell> GetCellsInDistance(IMap map, ICell point, int distance)
     {

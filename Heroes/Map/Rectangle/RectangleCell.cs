@@ -1,9 +1,4 @@
-﻿using Alba.CsConsoleFormat;
-using System.Drawing;
-using Heroes.Units;
-using Heroes.Units.Army;
-using Heroes.Utils;
-using Point = System.Drawing.Point;
+﻿using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;
 

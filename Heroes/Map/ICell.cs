@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using Heroes.Units;
-using Heroes.Units.Army;
 
 namespace Heroes.Map;
 

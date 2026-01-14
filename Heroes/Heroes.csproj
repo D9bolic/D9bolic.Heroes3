@@ -8,22 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Alba.CsConsoleFormat" Version="1.0.0" />
-      <PackageReference Include="Alba.CsConsoleFormat.ColorfulConsole" Version="1.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Map\Console\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Menu\Interfaces\IMenu.cs" />
-      <Compile Remove="Menu\Unit\AttackSelectionUnitMenuItem.cs" />
-      <Compile Remove="Menu\Unit\AttackUnitMenuItem.cs" />
-      <Compile Remove="Menu\Unit\MovementCellSelectionMenuItem.cs" />
-      <Compile Remove="Menu\ConsoleMenu.cs" />
-      <Compile Remove="Menu\ExitMenuItem.cs" />
-      <Compile Remove="Menu\MenuBreaker.cs" />
     </ItemGroup>
 
 </Project>

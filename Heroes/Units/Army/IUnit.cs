@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using Heroes.Map;
-using Heroes.Players;
+﻿using Heroes.Map;
 using Heroes.Units.Effects;
 
 namespace Heroes.Units.Army;

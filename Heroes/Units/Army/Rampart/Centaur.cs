@@ -1,11 +1,8 @@
 ﻿using System.Drawing;
-using Heroes.Map;
-using Heroes.Players;
 
 namespace Heroes.Units.Army.Rampart;
 
 
-[Asset("Unit:Rampart:Centaur", "c")]
 public class Centaur : UnitBase
 {
     public Centaur(Point coordinates) : base("Centaur", coordinates)

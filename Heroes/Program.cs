@@ -2,14 +2,10 @@
 
 using System.Drawing;
 using System.Reflection;
-using System.Security.Cryptography;
 using Heroes.Map;
 using Heroes.Map.Rectangle;
-using Heroes.Menu;
 using Heroes.Menu.Unit;
 using Heroes.Players;
-using Heroes.Units;
-using Heroes.Units.Army;
 using Heroes.Units.Army.Castle;
 using Heroes.Units.Army.Rampart;
 using Heroes.Units.Heroes.Castle;
@@ -17,9 +13,9 @@ using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var map = new RectangleMap(5,3);
-var assetStore = new ConsoleAssetStore(Assembly.GetExecutingAssembly());
-var assetManager = new ConsoleAssetManager(map, assetStore);
+var assetStore = new ConsoleAssetsStore(new RectanglePattern());
+var map = new RectangleMap(5,3, assetStore);
+
 //var menuFactory = new ConsoleMenuFactory(map);
 
 var player1 = SetupPlayer1();
@@ -37,7 +33,7 @@ foreach (var turn in tracker)
 
     turn.Player.Activate();
     turn.Unit.Activate();
-    assetManager.DrawMap(
+    map.Draw(
         player1.Army.Select(x => new AllyUnitBox(x)).OfType<IMapItem>()
         .Union(player2.Army.Select(x => new EnemyUnitBox(x)).OfType<IMapItem>())
         .Union(obstacles).ToArray());

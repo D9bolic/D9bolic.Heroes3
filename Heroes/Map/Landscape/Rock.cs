@@ -11,5 +11,5 @@ public class Rock : IMapItem
 
     public Point Coordinates { get; }
     
-    public string Name => "Landscape:Rock";
+    public string Name => "Rock";
 }

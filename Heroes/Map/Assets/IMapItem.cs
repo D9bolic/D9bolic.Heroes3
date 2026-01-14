@@ -2,9 +2,13 @@
 
 namespace Heroes.Map;
 
-public interface IMapItem
+
+public interface IDrawableItem
+{
+    public string Name { get; }
+}
+
+public interface IMapItem : IDrawableItem
 {
     public Point Coordinates { get; }
-    
-    public string Name { get; }
 }
