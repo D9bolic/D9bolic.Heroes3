@@ -1,10 +1,10 @@
-﻿using Heroes.Players;
+﻿using System.Drawing;
 
 namespace Heroes.Units.Army.Castle;
 
 public class Pikeman : UnitBase
 {
-    public Pikeman(IPlayer player) : base(player, "p", "Pikeman")
+    public Pikeman(Point coordinates) : base("Pikeman", coordinates)
     {
         StateLine = new UnitStateLine
         {

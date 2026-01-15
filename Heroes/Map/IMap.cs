@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using Alba.CsConsoleFormat;
-using Heroes.Units;
-using Heroes.Units.Army;
-using Point = System.Drawing.Point;
+﻿using System.Drawing;
 
 namespace Heroes.Map;
 
 public interface IMap
 {
-    void Draw();
-    
-    void PlaceUnit(IUnit unit, Point coordinates);
+    IEnumerable<IMapItem> Cells { get; }
 
-    IEnumerable<ICell> Cells { get; }
+    void Draw(IEnumerable<IMapItem> mapItems);
+
+    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance);
 }

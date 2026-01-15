@@ -1,15 +1,13 @@
-﻿using System.Drawing;
-using Heroes.Map;
-using Heroes.Players;
+﻿using Heroes.Map;
 using Heroes.Units.Effects;
 
 namespace Heroes.Units.Army;
 
-public interface IUnit : IMapItem, IDisposable
+public interface IUnit : IMapItem
 {
-    public int Wounds { get; set; }
+    public bool CanFly { get; }
     
-    public IPlayer Player { get; }
+    public int Wounds { get; set; }
 
     public UnitStateLine StateLine { get; }
     
@@ -19,19 +17,11 @@ public interface IUnit : IMapItem, IDisposable
     
     public int HitPoints { get; }
     
-    void Activate();
-
-    void Deactivate();
-
-    void MarkAsAlly();
+    public string Name { get; }
     
-    void MarkAsEnemy();
+    void Activate();
     
     void CounterAttack(IUnit target);
     
     void Defence(IUnit attacker);
-
-    bool CanMove(ICell cell);
 }
-
-public record UnitPlacement(IUnit Unit, Point Location);

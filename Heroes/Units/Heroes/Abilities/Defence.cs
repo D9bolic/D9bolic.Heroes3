@@ -25,4 +25,10 @@ public class Defence : IEffect
             HitPoints = unitState.HitPoints,
         };
     }
+
+    public int TurnsLeft
+    {
+        get => -1;
+        set => field = value;
+    }
 }

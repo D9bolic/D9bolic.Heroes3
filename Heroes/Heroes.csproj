@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Alba.CsConsoleFormat" Version="1.0.0" />
-      <PackageReference Include="Alba.CsConsoleFormat.ColorfulConsole" Version="1.0.0" />
+      <Folder Include="Map\Console\" />
     </ItemGroup>
 
 </Project>

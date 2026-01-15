@@ -2,7 +2,7 @@
 
 namespace Heroes.Units.Effects;
 
-public class Defence : ILongEffect
+public class Defence : IEffect
 {
     public UnitStateLine Mutate(UnitStateLine unitState)
     {

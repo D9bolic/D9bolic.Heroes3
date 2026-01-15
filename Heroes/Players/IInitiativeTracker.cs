@@ -1,9 +1,8 @@
-﻿using Heroes.Units;
-using Heroes.Units.Army;
+﻿using Heroes.Menu;
 
 namespace Heroes.Players;
 
-public interface IInitiativeTracker : IEnumerable<IUnit>
+public interface IInitiativeTracker : IEnumerable<TurnInformation>
 {
     
 }

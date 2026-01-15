@@ -1,5 +1,4 @@
-﻿using Heroes.Units;
-using Heroes.Units.Army;
+﻿using Heroes.Units.Army;
 using Heroes.Units.Heroes;
 
 namespace Heroes.Players;
@@ -13,8 +12,6 @@ public interface IPlayer
     public List<IUnit> Army { get; }
 
     void Activate();
-
-    void Deactivate();
     
     bool CheckLoose();
 }

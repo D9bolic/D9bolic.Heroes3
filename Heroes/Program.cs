@@ -1,43 +1,53 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Drawing;
-using System.Security.Cryptography;
+using System.Reflection;
 using Heroes.Map;
 using Heroes.Map.Rectangle;
+using Heroes.Menu;
+using Heroes.Menu.Unit;
 using Heroes.Players;
-using Heroes.Units;
 using Heroes.Units.Army;
 using Heroes.Units.Army.Castle;
 using Heroes.Units.Army.Rampart;
 using Heroes.Units.Heroes.Castle;
-using Heroes.Units.Menu.UnitMenu;
 using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var map = new RectangleMap(5,3);
-map.GenerateRandomObstacles(2);
+var assetStore = new ConsoleAssetsStore(new RectanglePattern());
+var map = new RectangleMap(5,3, assetStore);
 
-var player1 = SetupPlayer1(map);
-var player2 = SetupPlayer2(map);
-var tracker = new InitiativeTracker(player1.Army.Union(player2.Army));
-foreach (var unit in tracker)
+var menuFactory = new ConsoleMenuFactory();
+
+var player1 = SetupPlayer1();
+var player2 = SetupPlayer2();
+var obstacles = map.GenerateRandomObstacles(2, player1.Army.Union(player2.Army).ToArray());
+
+var tracker = new InitiativeTracker(player1, player2, map, obstacles);
+foreach (var turn in tracker)
 {
-    if (unit.Player.CheckLoose())
+    if (turn.Player.CheckLoose())
     {
-       Console.WriteLine($"Player {unit.Player.Name} loosed!");
+       Console.WriteLine($"Player {turn.Player.Name} loosed!");
        break; 
     }
+    
+    turn.Player.Activate();
+    turn.ActiveUnit.Activate();
+    var menuBreaker = new MenuBreaker
+    {
+        ShouldMenuBreak = false,
+    };
+    var menu = menuFactory.CreateMenu(menuBreaker, turn,
+        new MovementUnitMenuItem(turn, menuFactory, menuBreaker),
+        new AttackUnitMenuItem(turn, menuFactory, menuBreaker),
+        new DefenceMenuItem(turn, menuBreaker));
 
-    unit.Player.Activate();
-    unit.Activate();
-    var menu = new ConsoleUnitMenu(map, unit.Player, unit);
-    menu.Render();
-    unit.Deactivate();
-    unit.Player.Deactivate();
+    menu.Render(turn);
 }
 
-IPlayer SetupPlayer1(IMap map)
+IPlayer SetupPlayer1()
 {
     var player = new Player
     {
@@ -45,21 +55,15 @@ IPlayer SetupPlayer1(IMap map)
         Hero = new Christian(),
     };
 
-    var placements = new List<UnitPlacement>
-    {
-        new UnitPlacement(new Pikeman(player), new Point(0, 0)),
-        new UnitPlacement(new Griffin(player), new Point(0, 2)),
-    };
-    foreach (var placement in placements)
-    {
-        map.PlaceUnit(placement.Unit, placement.Location);
-    }
-    player.Deactivate();
+    //ToDo Effects
+    player.Army.Add(new Pikeman(new Point(0, 0)));
+    player.Army.Add(new Griffin(new Point(0, 2)));
+    
     return player;
 }
 
 
-IPlayer SetupPlayer2(IMap map)
+IPlayer SetupPlayer2()
 {
     var player = new Player
     {
@@ -67,16 +71,8 @@ IPlayer SetupPlayer2(IMap map)
         Hero = new Clancy(),
     };
     
-    var placements = new List<UnitPlacement>
-    {
-        new UnitPlacement(new Elf(player), new Point(4, 0)),
-        new UnitPlacement(new Centaur(player), new Point(4, 2)),
-    };
-    foreach (var placement in placements)
-    {
-        map.PlaceUnit(placement.Unit, placement.Location);
-    }
+    player.Army.Add(new Elf(new Point(4, 0)));
+    player.Army.Add(new Centaur(new Point(4, 2)));
     
-    player.Deactivate();
     return player;
 }
