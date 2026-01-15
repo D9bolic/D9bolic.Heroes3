@@ -17,8 +17,11 @@ public abstract class UnitBase : IMapItem, IUnit
         Coordinates = coordinates;
         LongEffects = new LongEffectsList();
     }
-    
+
+
+    public virtual bool CanFly => false;
     public Point Coordinates { get; set; }
+    
     protected virtual int CounterAttacks { get; set; } = 1;
 
     public int Wounds { get; set; }
@@ -99,10 +102,5 @@ public abstract class UnitBase : IMapItem, IUnit
             Console.WriteLine($"{_name} {HitPoints} hit points left");
             
         }
-    }
-
-    public virtual bool CanFly()
-    {
-        return false;
     }
 }

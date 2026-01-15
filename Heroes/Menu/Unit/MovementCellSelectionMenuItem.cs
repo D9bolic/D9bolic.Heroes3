@@ -16,7 +16,10 @@ public class MovementCellSelectionMenuItem : IMenuItem
         _breaker = breaker;
         this.Cell = Cell;
         Unit = unit;
+        ExtraObjects = new[] { new SelectionBox(Cell) };
     }
+
+    public IEnumerable<IMapItem> ExtraObjects { get; }
 
     public bool CanRender() => true;
 
@@ -53,6 +56,6 @@ public class MovementCellSelectionMenuItem : IMenuItem
     {
         Unit.Coordinates = Cell.Coordinates;
         Unit.MovementLeft--;
-        _breaker.ShouldMenuBreak = Unit.MovementLeft <= 0;
+        _breaker.ShouldMenuBreak = true;
     }
 }

@@ -9,22 +9,22 @@ public class MovementUnitMenuItem : IMenuItem
 {
     private readonly TurnInformation _turn;
     private readonly IMenuFactory _menuFactory;
+    private readonly IMenuBreaker _menuBreaker;
     private IMenu _menu;
 
-    public MovementUnitMenuItem(TurnInformation turn, IMenuFactory menuFactory)
+    public MovementUnitMenuItem(TurnInformation turn, IMenuFactory menuFactory, IMenuBreaker menuBreaker)
     {
         _turn = turn;
         _menuFactory = menuFactory;
-    }
-
-    public void Dispose()
-    {
+        _menuBreaker = menuBreaker;
     }
 
     public bool CanRender()
     {
         return GetSuitableCells().Any() && _turn.ActiveUnit.MovementLeft > 0;
     }
+
+    public IEnumerable<IMapItem> ExtraObjects => Array.Empty<IMapItem>();
 
     public string Render()
     {
@@ -33,38 +33,55 @@ public class MovementUnitMenuItem : IMenuItem
 
     public void Select()
     {
-        var cells = GetSuitableCells();
-        var menuBreaker = new MenuBreaker
+        var movementMenuBreaker = new MenuBreaker
         {
-            ShouldMenuBreak = true,
+            ShouldMenuBreak = false,
+        };
+        var exitMenuBreaker = new MenuBreaker
+        {
+            ShouldMenuBreak = false,
         };
 
-        _menu = _menuFactory.CreateMenu(menuBreaker, cells
-            .Select<IMapItem, IMenuItem>(x => new MovementCellSelectionMenuItem(x, _turn.ActiveUnit, menuBreaker))
-            .Union(new[] {new ExitMenuItem(menuBreaker)})
-            .ToArray());
-        _menu.Render(new TurnInformation()
+        while (!exitMenuBreaker.ShouldMenuBreak && CanRender())
         {
-            Allies = _turn.Allies,
-            Enemies = _turn.Enemies,
-            ActiveUnit = _turn.ActiveUnit,
-            Map = _turn.Map,
-            Obstacles = _turn.Obstacles,
-            ExtraObjects = cells.Select(x => new SelectionBox(x)).ToArray(),
-        });
+            var cells = GetSuitableCells();
+            _menu = _menuFactory.CreateMenu(movementMenuBreaker,
+                _turn,
+                cells
+                    .Select<IMapItem, IMenuItem>(x =>
+                        new MovementCellSelectionMenuItem(x, _turn.ActiveUnit, movementMenuBreaker))
+                    .Union([new ExitMenuItem(exitMenuBreaker)])
+                    .ToArray());
+            _menu.Render(new TurnInformation()
+            {
+                Allies = _turn.Allies,
+                Enemies = _turn.Enemies,
+                ActiveUnit = _turn.ActiveUnit,
+                Map = _turn.Map,
+                Obstacles = _turn.Obstacles,
+            });
+        }
+
+        _menuBreaker.AnyActionInvoked = movementMenuBreaker.ShouldMenuBreak;
     }
 
     private IEnumerable<IMapItem> GetSuitableCells()
     {
-        var units = _turn
+        var obstacles = _turn
             .Allies
             .Union(_turn.Enemies)
             .Select(o => o.Coordinates)
-            .ToArray();
+            .ToList();
+
+        if (!_turn.ActiveUnit.CanFly)
+        {
+            obstacles.AddRange(_turn.Obstacles.Select(x => x.Coordinates));
+        }
+
 
         return _turn.Map
             .GetCellsInDistance(_turn.ActiveUnit.Coordinates, 1)
-            .Where(i => !units.Contains(i.Coordinates))
+            .Where(i => !obstacles.Contains(i.Coordinates))
             .ToArray();
     }
 }

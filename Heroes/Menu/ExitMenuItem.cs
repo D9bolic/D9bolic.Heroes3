@@ -1,4 +1,6 @@
-﻿namespace Heroes.Menu;
+﻿using Heroes.Map;
+
+namespace Heroes.Menu;
 
 public class ExitMenuItem : IMenuItem
 {
@@ -12,6 +14,8 @@ public class ExitMenuItem : IMenuItem
     public void Dispose()
     {
     }
+
+    public IEnumerable<IMapItem> ExtraObjects => Array.Empty<IMapItem>();
 
     public bool CanRender() => true;
 

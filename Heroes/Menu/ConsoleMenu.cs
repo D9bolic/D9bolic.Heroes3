@@ -1,16 +1,17 @@
 ﻿using Heroes.Map;
+using Heroes.Utils;
 
 namespace Heroes.Menu;
 
 public class ConsoleMenu : IMenu
 {
+    private readonly TurnInformation _turnInformation;
     private readonly IEnumerable<IMenuItem> _itemsProvider;
     private readonly IMenuBreaker _menuBreaker;
-    private readonly IMap _map;
 
-    public ConsoleMenu(IMap map, IEnumerable<IMenuItem> itemsProvider, IMenuBreaker menuBreaker)
+    public ConsoleMenu(TurnInformation turnInformation, IEnumerable<IMenuItem> itemsProvider, IMenuBreaker menuBreaker)
     {
-        _map = map;
+        _turnInformation = turnInformation;
         _itemsProvider = itemsProvider;
         _menuBreaker = menuBreaker;
     }
@@ -30,7 +31,8 @@ public class ConsoleMenu : IMenu
                     Number = index + 1,
                 }).ToArray();
 
-            _map.Draw(turnInformationProvider.Elements);
+            var extra = items.SelectMany(x => x.ExtraObjects);
+            _turnInformation.Map.Draw(extra.Union(turnInformationProvider.Elements, MapItemsComparer.Instance));
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");
@@ -49,6 +51,6 @@ public class ConsoleMenu : IMenu
             }
 
             indexedItems.First(x => x.Number == number).UnitMenuItem.Select();
-        } while (!_menuBreaker.ShouldMenuBreak);
+        } while (!_menuBreaker.ShouldMenuBreak && _itemsProvider.Any(x => x.CanRender()));
     }
 }

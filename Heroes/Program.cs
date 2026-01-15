@@ -18,13 +18,13 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 var assetStore = new ConsoleAssetsStore(new RectanglePattern());
 var map = new RectangleMap(5,3, assetStore);
 
-var menuFactory = new ConsoleMenuFactory(map);
+var menuFactory = new ConsoleMenuFactory();
 
 var player1 = SetupPlayer1();
 var player2 = SetupPlayer2();
 var obstacles = map.GenerateRandomObstacles(2, player1.Army.Union(player2.Army).ToArray());
 
-var tracker = new InitiativeTracker(player1, player2);
+var tracker = new InitiativeTracker(player1, player2, map, obstacles);
 foreach (var turn in tracker)
 {
     if (turn.Player.CheckLoose())
@@ -32,39 +32,19 @@ foreach (var turn in tracker)
        Console.WriteLine($"Player {turn.Player.Name} loosed!");
        break; 
     }
-
-    turn.Player.Activate();
-    turn.Unit.Activate();
     
+    turn.Player.Activate();
+    turn.ActiveUnit.Activate();
     var menuBreaker = new MenuBreaker
     {
         ShouldMenuBreak = false,
     };
-    var enemyPlayer = player1 == turn.Player ? player2 : player1;
-    var allyArmy = turn
-        .Player
-        .Army
-        .Select<IUnit, IMapItem>(x => x == turn.Unit 
-            ? new SelectionBox(x)
-            : new AllyUnitBox(x)).ToArray();
-    var enemyArmy = enemyPlayer
-        .Army
-        .Select<IUnit, IMapItem>(x => new EnemyUnitBox(x)).ToArray();
-    
-    var turnInformation = new TurnInformation
-    {
-        ActiveUnit = turn.Unit,
-        Map = map,
-        Allies = allyArmy,
-        Enemies = enemyArmy,
-        Obstacles = obstacles,
-    };
-    var menu = menuFactory.CreateMenu(menuBreaker,
-        new MovementUnitMenuItem(turnInformation, menuFactory),
-        new AttackUnitMenuItem(turnInformation, menuFactory, menuBreaker),
-        new DefenceMenuItem(turnInformation, menuBreaker));
+    var menu = menuFactory.CreateMenu(menuBreaker, turn,
+        new MovementUnitMenuItem(turn, menuFactory, menuBreaker),
+        new AttackUnitMenuItem(turn, menuFactory, menuBreaker),
+        new DefenceMenuItem(turn, menuBreaker));
 
-    menu.Render(turnInformation);
+    menu.Render(turn);
 }
 
 IPlayer SetupPlayer1()

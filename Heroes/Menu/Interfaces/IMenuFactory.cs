@@ -4,20 +4,13 @@ namespace Heroes.Menu;
 
 public interface IMenuFactory
 {
-    public IMenu CreateMenu(IMenuBreaker menuBreaker, params IMenuItem[] items);
+    public IMenu CreateMenu(IMenuBreaker menuBreaker, TurnInformation turnInformation, params IMenuItem[] items);
 }
 
 public class ConsoleMenuFactory : IMenuFactory
 {
-    private readonly IMap _map;
-
-    public ConsoleMenuFactory(IMap map)
+    public IMenu CreateMenu(IMenuBreaker menuBreaker, TurnInformation turnInformation, params IMenuItem[] items)
     {
-        _map = map;
-    }
-    
-    public IMenu CreateMenu(IMenuBreaker menuBreaker, params IMenuItem[] items)
-    {
-        return new ConsoleMenu(_map, items, menuBreaker);
+        return new ConsoleMenu(turnInformation, items, menuBreaker);
     }
 }

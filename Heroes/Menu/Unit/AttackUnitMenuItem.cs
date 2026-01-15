@@ -19,9 +19,7 @@ public class AttackUnitMenuItem : IMenuItem
         _unitMenuBreaker = unitMenuBreaker;
     }
 
-    public void Dispose()
-    {
-    }
+    public IEnumerable<IMapItem> ExtraObjects => Array.Empty<IMapItem>();
 
     public bool CanRender()
     {
@@ -37,8 +35,11 @@ public class AttackUnitMenuItem : IMenuItem
     {
         var enemies = GetEnemiesInAttackRange();
         
-        _menu = _menuFactory.CreateMenu(_unitMenuBreaker, enemies
-                .Select<IMapItem, IMenuItem>(x => new AttackSelectionUnitMenuItem(x, _turn.ActiveUnit, _unitMenuBreaker)).ToArray());
+        _menu = _menuFactory
+            .CreateMenu(_unitMenuBreaker, _turn, 
+                enemies
+                .Select<IUnit, IMenuItem>(x => new AttackSelectionUnitMenuItem(x, _turn.ActiveUnit, _unitMenuBreaker))
+                .ToArray());
         
         _menu.Render(new TurnInformation()
         {
@@ -47,11 +48,10 @@ public class AttackUnitMenuItem : IMenuItem
             ActiveUnit = _turn.ActiveUnit,
             Map = _turn.Map,
             Obstacles = _turn.Obstacles,
-            ExtraObjects = enemies,
         });
     }
     
-    private IEnumerable<IMapItem> GetEnemiesInAttackRange()
+    private IEnumerable<IUnit> GetEnemiesInAttackRange()
     {
         var cells = _turn.Map
             .GetCellsInDistance(_turn.ActiveUnit.Coordinates, _turn.ActiveUnit.StateLine.AttackRange)

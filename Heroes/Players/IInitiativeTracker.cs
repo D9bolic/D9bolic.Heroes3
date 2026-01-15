@@ -1,6 +1,8 @@
-﻿namespace Heroes.Players;
+﻿using Heroes.Menu;
 
-public interface IInitiativeTracker : IEnumerable<CurrentTurn>
+namespace Heroes.Players;
+
+public interface IInitiativeTracker : IEnumerable<TurnInformation>
 {
     
 }

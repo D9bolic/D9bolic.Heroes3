@@ -18,8 +18,6 @@ public class Griffin : UnitBase
             DamageMax = 6,
         };
     }
-    public override bool CanFly()
-    {
-        return true;
-    }
+
+    public override bool CanFly => true;
 }

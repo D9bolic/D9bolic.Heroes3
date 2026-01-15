@@ -7,16 +7,19 @@ public class AttackSelectionUnitMenuItem : IMenuItem
 {
     private readonly IMenuBreaker _breaker;
         
-    public IMapItem Enemy { get; }
+    public IUnit Enemy { get; }
     
     public IUnit Unit { get; }
 
-    public AttackSelectionUnitMenuItem(IMapItem enemy, IUnit unit, IMenuBreaker breaker)
+    public AttackSelectionUnitMenuItem(IUnit enemy, IUnit unit, IMenuBreaker breaker)
     {
         _breaker = breaker;
         this.Enemy = enemy;
         Unit = unit;
+        ExtraObjects = new[] { new AttackedUnitBox(Enemy) };
     }
+
+    public IEnumerable<IMapItem> ExtraObjects { get; }
 
     public bool CanRender() => true;
 
@@ -27,9 +30,8 @@ public class AttackSelectionUnitMenuItem : IMenuItem
 
     public void Select()
     {
-        var enemy = Enemy is IUnit unit ? unit : (IUnit)(((IWrapper) Enemy).Item);
-        enemy!.Defence(Unit);
-        enemy!.CounterAttack(Unit);
+        Enemy!.Defence(Unit);
+        Enemy!.CounterAttack(Unit);
         Console.ReadKey();
         _breaker.ShouldMenuBreak = true;
     }

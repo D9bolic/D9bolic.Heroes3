@@ -5,6 +5,8 @@ namespace Heroes.Units.Army;
 
 public interface IUnit : IMapItem
 {
+    public bool CanFly { get; }
+    
     public int Wounds { get; set; }
 
     public UnitStateLine StateLine { get; }
@@ -22,6 +24,4 @@ public interface IUnit : IMapItem
     void CounterAttack(IUnit target);
     
     void Defence(IUnit attacker);
-
-    bool CanFly();
 }

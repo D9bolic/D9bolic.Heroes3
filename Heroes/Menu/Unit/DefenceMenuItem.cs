@@ -1,4 +1,5 @@
-﻿using Heroes.Units.Army;
+﻿using Heroes.Map;
+using Heroes.Units.Army;
 using Heroes.Units.Effects;
 
 namespace Heroes.Menu.Unit;
@@ -15,7 +16,9 @@ public class DefenceMenuItem : IMenuItem
         Turn = turn;
     }
 
-    public bool CanRender() => true;
+    public IEnumerable<IMapItem> ExtraObjects => Array.Empty<IMapItem>();
+
+    public bool CanRender() => !_breaker.AnyActionInvoked;
 
     public string Render()
     {
