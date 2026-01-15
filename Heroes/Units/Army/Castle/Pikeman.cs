@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Heroes.Units.Army.Attack;
 
 namespace Heroes.Units.Army.Castle;
 
@@ -10,12 +11,13 @@ public class Pikeman : UnitBase
         {
             Initiative = 1,
             Speed = 1,
-            AttackRange = 2,
             Attack = 4,
             Defence = 5,
             HitPoints = 10,
             DamageMin = 1,
             DamageMax = 3,
         };
+        
+        AttackPattern = new MeleeAttackPattern(this);
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+﻿using Heroes.Map.Assets;
 
-namespace Heroes.Map;
+namespace Heroes.Map.Rectangle;
 
 public class NewLineItem : IDrawableItem
 {

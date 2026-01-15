@@ -1,14 +1,16 @@
 ﻿using System.Security.Cryptography;
 using Heroes.Map;
+using Heroes.Map.Assets;
 using Heroes.Map.Landscape;
+using Heroes.Units.Army;
 
 namespace Heroes.Utils;
 
 public static class DistanceExtensions
 {
-    public static IEnumerable<IMapItem> GenerateRandomObstacles(this IMap map, int count, IEnumerable<IMapItem> items)
+    public static IEnumerable<ILandscape> GenerateRandomObstacles(this IMap map, int count, IEnumerable<IMapItem> items)
     {
-        var obstacles =  new List<IMapItem>();
+        var obstacles =  new List<ILandscape>();
         for (int i = 0; i < count; i++)
         {
             var emptyCells = map
@@ -21,5 +23,15 @@ public static class DistanceExtensions
         }
 
         return obstacles;
+    }
+
+    public static bool IsDead(this IUnit unit)
+    {
+        return unit.StateLine.HitPoints - unit.Wounds <= 0;
+    }
+    
+    public static int HitPoints(this IUnit unit)
+    {
+        return unit.StateLine.HitPoints - unit.Wounds;
     }
 }

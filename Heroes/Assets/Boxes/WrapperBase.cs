@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
-using Heroes.Map;
 
-namespace Heroes.Menu.Unit;
+namespace Heroes.Map.Assets.Boxes;
 
 public abstract class WrapperBase : IWrapper
 {

@@ -2,7 +2,7 @@
 
 namespace Heroes.Map.Landscape;
 
-public class Rock : IMapItem
+public class Rock : ILandscape
 {
     public Rock(Point coordinates)
     {
@@ -12,4 +12,6 @@ public class Rock : IMapItem
     public Point Coordinates { get; set; }
     
     public string Name => "Rock";
+
+    public bool CanMoveInto => false;
 }

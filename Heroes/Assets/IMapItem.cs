@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Heroes.Map;
+namespace Heroes.Map.Assets;
 
 
 public interface IDrawableItem

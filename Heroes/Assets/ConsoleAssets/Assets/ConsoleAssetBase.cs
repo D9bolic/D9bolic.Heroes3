@@ -1,11 +1,11 @@
-﻿namespace Heroes.Map;
+﻿namespace Heroes.Map.Assets.ConsoleAssets.Assets;
 
 public abstract class ConsoleAssetBase
 {
     protected void SetCursorPosition(int col, int row)
     {
-        int originalBufferWidth = Console.BufferWidth;
-        int originalBufferHeight = Console.BufferHeight;
+        int originalBufferWidth = System.Console.BufferWidth;
+        int originalBufferHeight = System.Console.BufferHeight;
 
         if (originalBufferWidth < col + 1)
         {
@@ -17,7 +17,7 @@ public abstract class ConsoleAssetBase
             SetWindowSize(originalBufferWidth, row + 1);
         }
 
-        Console.SetCursorPosition(col, row);
+        System.Console.SetCursorPosition(col, row);
     }
 
     protected void SetWindowSize(int width, int height)
@@ -25,7 +25,7 @@ public abstract class ConsoleAssetBase
         try
         {
             //   Console.SetWindowSize(width, height);
-            Console.SetBufferSize(width, height);
+            System.Console.SetBufferSize(width, height);
         }
         catch (ArgumentOutOfRangeException)
         {

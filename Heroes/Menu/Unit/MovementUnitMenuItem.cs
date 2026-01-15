@@ -1,4 +1,6 @@
 ﻿using Heroes.Map;
+using Heroes.Map.Assets;
+using Heroes.Menu.Interfaces;
 using Heroes.Players;
 using Heroes.Units.Army;
 using Heroes.Utils;
@@ -77,7 +79,6 @@ public class MovementUnitMenuItem : IMenuItem
         {
             obstacles.AddRange(_turn.Obstacles.Select(x => x.Coordinates));
         }
-
 
         return _turn.Map
             .GetCellsInDistance(_turn.ActiveUnit.Coordinates, 1)

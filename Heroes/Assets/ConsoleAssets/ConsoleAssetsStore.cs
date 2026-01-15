@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using Heroes.Map.Assets.ConsoleAssets.Assets;
 
-namespace Heroes.Map;
+namespace Heroes.Map.Assets.ConsoleAssets;
 
 public class ConsoleAssetsStore : IAssetsStore
 {
@@ -17,7 +17,10 @@ public class ConsoleAssetsStore : IAssetsStore
 
         SetupLandscape("Rock", "R");
         SetupLandscape("Empty", " ");
-        _inMemoryStore.Add($"New Line", new ConsoleNewLineAsset());
+        foreach (var box in consolePattern.SpecificAssets)
+        {
+            _inMemoryStore.Add(box.Key, box.Asset);
+        }
     }
 
     private void SetupUnit(string name, string literal)

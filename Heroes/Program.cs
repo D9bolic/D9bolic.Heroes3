@@ -3,14 +3,20 @@
 using System.Drawing;
 using System.Reflection;
 using Heroes.Map;
+using Heroes.Map.Assets.ConsoleAssets;
+using Heroes.Map.Assets.ConsoleAssets.Patterns.Hexagonal;
+using Heroes.Map.Assets.ConsoleAssets.Patterns.Rectangle;
+using Heroes.Map.Hex;
 using Heroes.Map.Rectangle;
 using Heroes.Menu;
+using Heroes.Menu.Interfaces;
 using Heroes.Menu.Unit;
 using Heroes.Players;
 using Heroes.Units.Army;
 using Heroes.Units.Army.Castle;
 using Heroes.Units.Army.Rampart;
-using Heroes.Units.Heroes.Castle;
+using Heroes.Units.Heroes.Castle.Knight;
+using Heroes.Units.Heroes.Rampart.Ranger;
 using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;

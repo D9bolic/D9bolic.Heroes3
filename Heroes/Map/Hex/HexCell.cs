@@ -1,11 +1,11 @@
 ﻿using Heroes.Map.Assets;
 using Point = System.Drawing.Point;
 
-namespace Heroes.Map.Rectangle;
+namespace Heroes.Map.Hex;
 
-public class RectangleCell : IMapItem
+public class HexCell : IMapItem
 {
-    public RectangleCell(Point coordinates)
+    public HexCell(Point coordinates)
     {
         Coordinates = coordinates;
     }

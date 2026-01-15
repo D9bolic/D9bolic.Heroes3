@@ -1,6 +1,6 @@
-﻿using Heroes.Map;
+﻿using Heroes.Players;
 
-namespace Heroes.Menu;
+namespace Heroes.Menu.Interfaces;
 
 public interface IMenu
 {

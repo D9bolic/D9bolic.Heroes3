@@ -1,4 +1,5 @@
 ﻿using Heroes.Map;
+using Heroes.Map.Assets;
 
 namespace Heroes.Utils;
 

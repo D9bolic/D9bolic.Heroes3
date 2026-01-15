@@ -1,15 +1,19 @@
 ﻿using System.Drawing;
 using System.Security.Cryptography;
 using Heroes.Map;
+using Heroes.Map.Assets;
+using Heroes.Units.Army.Attack;
 using Heroes.Units.Effects;
+using Heroes.Utils;
 
 namespace Heroes.Units.Army;
 
-public abstract class UnitBase : IMapItem, IUnit
+public abstract class UnitBase : IUnit
 {
     private readonly string _name;
     private readonly string _assetBucket;
     protected readonly UnitStateLine _unitStateLine;
+    protected readonly IAttackPattern _attackPattern;
 
     protected UnitBase(string name, Point coordinates)
     {
@@ -20,11 +24,18 @@ public abstract class UnitBase : IMapItem, IUnit
 
 
     public virtual bool CanFly => false;
+
     public Point Coordinates { get; set; }
     
-    protected virtual int CounterAttacks { get; set; } = 1;
+    public virtual int CounterAttacks { get; set; } = 1;
 
     public int Wounds { get; set; }
+
+    public IAttackPattern AttackPattern
+    {
+        get => _attackPattern;
+        protected init => _attackPattern = value;
+    }
 
     public UnitStateLine StateLine
     {
@@ -41,15 +52,13 @@ public abstract class UnitBase : IMapItem, IUnit
     
     public int MovementLeft { get; set; }
 
-    public int HitPoints => StateLine.HitPoints - Wounds;
-
     public string Name => _name;
     
     string IDrawableItem.Name => GetType().Name;
     
     public void Activate()
     {
-        if(HitPoints <= 0)
+        if (this.IsDead())
         {
             return;
         }
@@ -63,8 +72,6 @@ public abstract class UnitBase : IMapItem, IUnit
         }
  
         StateLine.ToConsole();
-        //_cell.BackgroundColor = ConsoleColor.Green;
-        //_cell.TextColor = ConsoleColor.Black;
 
         CounterAttacks = 1;
         MovementLeft = StateLine.Speed;
@@ -72,7 +79,7 @@ public abstract class UnitBase : IMapItem, IUnit
 
     public void CounterAttack(IUnit target)
     {
-        if (HitPoints <= 0 || CounterAttacks <= 0)
+        if (this.IsDead() || CounterAttacks <= 0)
         {
             return;
         }
@@ -93,13 +100,13 @@ public abstract class UnitBase : IMapItem, IUnit
         
         Console.WriteLine($"{attacker.Name} attacking {_name} with damage {damage}");
         this.Wounds += damage;
-        if (HitPoints <= 0)
+        if (this.IsDead())
         {
             Console.WriteLine( $"{_name} is dead");
         }
         else
         {
-            Console.WriteLine($"{_name} {HitPoints} hit points left");
+            Console.WriteLine($"{_name} {this.HitPoints()} hit points left");
             
         }
     }

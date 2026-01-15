@@ -1,4 +1,7 @@
 ﻿using Heroes.Map;
+using Heroes.Map.Assets;
+using Heroes.Menu.Interfaces;
+using Heroes.Players;
 using Heroes.Units.Army;
 using Heroes.Units.Effects;
 

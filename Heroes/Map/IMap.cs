@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Heroes.Map.Assets;
 
 namespace Heroes.Map;
 

@@ -1,10 +1,11 @@
 ﻿using Heroes.Map;
-using Heroes.Menu.Unit;
-using Heroes.Players;
+using Heroes.Map.Assets;
+using Heroes.Map.Assets.Boxes;
+using Heroes.Map.Landscape;
 using Heroes.Units.Army;
 using Heroes.Utils;
 
-namespace Heroes.Menu;
+namespace Heroes.Players;
 
 public class TurnInformation
 {
@@ -16,7 +17,7 @@ public class TurnInformation
 
     public IEnumerable<IUnit> Enemies { get; set; } = new List<IUnit>();
 
-    public IEnumerable<IMapItem> Obstacles { get; set; } = new List<IMapItem>();
+    public IEnumerable<ILandscape> Obstacles { get; set; } = new List<ILandscape>();
 
     public IMap Map { get; set; }
 

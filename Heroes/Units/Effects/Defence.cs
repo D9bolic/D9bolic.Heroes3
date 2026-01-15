@@ -13,7 +13,6 @@ public class Defence : IEffect
             Defence = unitState.Defence + 2,
             Speed = unitState.Speed,
             DamageMax = unitState.DamageMax,
-            AttackRange = unitState.AttackRange,
             DamageMin = unitState.DamageMin,
             HitPoints = unitState.HitPoints,
         };

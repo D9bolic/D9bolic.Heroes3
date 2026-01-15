@@ -1,4 +1,7 @@
 ﻿using Heroes.Map;
+using Heroes.Map.Assets;
+using Heroes.Map.Assets.Boxes;
+using Heroes.Menu.Interfaces;
 using Heroes.Units.Army;
 
 namespace Heroes.Menu.Unit;

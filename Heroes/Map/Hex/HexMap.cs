@@ -1,17 +1,18 @@
 ﻿using Heroes.Map.Assets;
 using Point = System.Drawing.Point;
 
-namespace Heroes.Map.Rectangle;
+namespace Heroes.Map.Hex;
 
-public class RectangleMap : IMap
+public class HexMap : IMap
 {
     private readonly int _columns;
     private readonly int _rows;
-    private readonly List<RectangleCell> _cells = new List<RectangleCell>();
+    private readonly List<HexCell> _cells = new List<HexCell>();
     private readonly IAssetsStore _assetsStore;
     private readonly IDrawableItem _newLineItem = new NewLineItem();
+    private readonly IDrawableItem _shiftItem = new ShiftItem();
 
-    public RectangleMap(int columns, int rows, IAssetsStore assetsStore)
+    public HexMap(int columns, int rows, IAssetsStore assetsStore)
     {
         _columns = columns;
         _rows = rows;
@@ -21,7 +22,7 @@ public class RectangleMap : IMap
         {
             for (var column = 0; column < _columns; column++)
             {
-                _cells.Add(new RectangleCell(new Point(column, row)));
+                _cells.Add(new HexCell(new Point(column, row)));
             }
         }
     }
@@ -32,6 +33,11 @@ public class RectangleMap : IMap
     {
         for (var row = 0; row < _rows; row++)
         {
+            if (row % 2 != 0)
+            {
+                _assetsStore.GetAsset(_shiftItem).Draw();
+            }
+
             for (var column = 0; column < _columns; column++)
             {
                 var coordinate = new Point(column, row);
@@ -44,6 +50,10 @@ public class RectangleMap : IMap
             }
 
             _assetsStore.GetAsset(_newLineItem).Draw();
+            if (row >= _rows - 1)
+            {
+                _assetsStore.GetAsset(_newLineItem).Draw();
+            }
         }
     }
 

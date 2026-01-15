@@ -1,6 +1,6 @@
-﻿using Heroes.Map;
+﻿using Heroes.Map.Assets;
 
-namespace Heroes.Menu;
+namespace Heroes.Menu.Interfaces;
 
 public interface IMenuItem
 {

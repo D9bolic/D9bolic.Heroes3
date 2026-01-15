@@ -1,4 +1,6 @@
 ﻿using Heroes.Map;
+using Heroes.Map.Assets;
+using Heroes.Menu.Interfaces;
 using Heroes.Players;
 using Heroes.Units.Army;
 using Heroes.Utils;
@@ -9,14 +11,14 @@ public class AttackUnitMenuItem : IMenuItem
 {
     private readonly TurnInformation _turn;
     private readonly IMenuFactory _menuFactory;
-    private readonly IMenuBreaker _unitMenuBreaker;
+    private readonly IMenuBreaker _menuBreaker;
     private IMenu _menu;
 
-    public AttackUnitMenuItem(TurnInformation _turn, IMenuFactory menuFactory, IMenuBreaker unitMenuBreaker)
+    public AttackUnitMenuItem(TurnInformation _turn, IMenuFactory menuFactory, IMenuBreaker menuBreaker)
     {
         this._turn = _turn;
         _menuFactory = menuFactory;
-        _unitMenuBreaker = unitMenuBreaker;
+        _menuBreaker = menuBreaker;
     }
 
     public IEnumerable<IMapItem> ExtraObjects => Array.Empty<IMapItem>();
@@ -35,10 +37,14 @@ public class AttackUnitMenuItem : IMenuItem
     {
         var enemies = GetEnemiesInAttackRange();
         
+        var exitMenuBreaker = new MenuBreaker();
+        var menuBreaker = new AttackMenuBreaker(exitMenuBreaker, _menuBreaker);
+
         _menu = _menuFactory
-            .CreateMenu(_unitMenuBreaker, _turn, 
+            .CreateMenu(menuBreaker, _turn, 
                 enemies
-                .Select<IUnit, IMenuItem>(x => new AttackSelectionUnitMenuItem(x, _turn.ActiveUnit, _unitMenuBreaker))
+                .Select<IUnit, IMenuItem>(x => new AttackSelectionUnitMenuItem(x, _turn.ActiveUnit, _menuBreaker))
+                .Union([new ExitMenuItem(exitMenuBreaker)])
                 .ToArray());
         
         _menu.Render(new TurnInformation()
@@ -53,12 +59,21 @@ public class AttackUnitMenuItem : IMenuItem
     
     private IEnumerable<IUnit> GetEnemiesInAttackRange()
     {
-        var cells = _turn.Map
-            .GetCellsInDistance(_turn.ActiveUnit.Coordinates, _turn.ActiveUnit.StateLine.AttackRange)
-            .Select(x => x.Coordinates)
-            .ToArray();
-        return _turn.Enemies
-            .Where(u => cells.Contains(u.Coordinates))
-            .ToArray();
+       return _turn.ActiveUnit.AttackPattern.GetTargets(_turn.Map, _turn.Enemies);
+    }
+    
+    private class AttackMenuBreaker : IMenuBreaker
+    {
+        private readonly IMenuBreaker _exitMenuBreaker;
+        private readonly IMenuBreaker _upMenuBreaker;
+
+        public AttackMenuBreaker(IMenuBreaker exitMenuBreaker, IMenuBreaker upMenuBreaker)
+        {
+            _exitMenuBreaker = exitMenuBreaker;
+            _upMenuBreaker = upMenuBreaker;
+        }
+
+        public bool ShouldMenuBreak { get => _upMenuBreaker.ShouldMenuBreak || _exitMenuBreaker.ShouldMenuBreak; set => _exitMenuBreaker.ShouldMenuBreak = value; }
+        public bool AnyActionInvoked { get=> _upMenuBreaker.AnyActionInvoked || _exitMenuBreaker.AnyActionInvoked; set => _exitMenuBreaker.ShouldMenuBreak = value; }
     }
 }
