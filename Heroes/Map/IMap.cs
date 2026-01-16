@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Heroes.Map.Assets;
+using Heroes.Assets;
 
 namespace Heroes.Map;
 
@@ -9,5 +9,5 @@ public interface IMap
 
     void Draw(IEnumerable<IMapItem> mapItems);
 
-    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance);
+    public IEnumerable<IMapItem> GetClosePoints(Point point);
 }

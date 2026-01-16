@@ -1,4 +1,4 @@
-﻿using Heroes.Map.Assets;
+﻿using Heroes.Assets;
 
 namespace Heroes.Map.Landscape;
 

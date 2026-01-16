@@ -10,7 +10,7 @@ public class Elf : UnitBase
         StateLine = new UnitStateLine
         {
             Initiative = 6,
-            Speed = 2,
+            Speed = 6,
             Attack = 9,
             Defence = 5,
             HitPoints = 15,

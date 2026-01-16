@@ -1,4 +1,4 @@
-﻿using Heroes.Map.Assets;
+﻿using Heroes.Assets;
 using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;

@@ -1,4 +1,4 @@
-﻿namespace Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿namespace Heroes.Assets.ConsoleAssets.Assets;
 
 public abstract class ConsoleAssetBase
 {

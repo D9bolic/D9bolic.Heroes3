@@ -9,8 +9,8 @@ public class Pikeman : UnitBase
     {
         StateLine = new UnitStateLine
         {
-            Initiative = 1,
-            Speed = 1,
+            Initiative = 4,
+            Speed = 4,
             Attack = 4,
             Defence = 5,
             HitPoints = 10,

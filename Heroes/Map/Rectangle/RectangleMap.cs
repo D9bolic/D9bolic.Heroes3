@@ -1,4 +1,4 @@
-﻿using Heroes.Map.Assets;
+﻿using Heroes.Assets;
 using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;
@@ -47,55 +47,22 @@ public class RectangleMap : IMap
         }
     }
 
-    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance)
+    public IEnumerable<IMapItem> GetClosePoints(Point point)
     {
-        var result = new List<IMapItem>();
-        foreach (var cell in Cells)
+        int q = point.X;
+        int r = point.Y;
+        List<Point> neiborgs = new List<Point>();
+        var neighborOffsets = new int[][]
         {
-            if (IsInDistance(cell, point, distance))
-            {
-                result.Add(cell);
-            }
+            new int[] {+1, 0}, new int[] {0, -1},
+            new int[] {-1, 0}, new int[] {0, +1},
+        };
+
+        foreach (var offset in neighborOffsets)
+        {
+            neiborgs.Add(new Point {X = q + offset[0], Y = r + offset[1]});
         }
 
-        return result;
-    }
-
-    public static bool IsInDistance(IMapItem cell, Point Coordinates, int distance)
-    {
-        if (cell.Coordinates.X > Coordinates.X && cell.Coordinates.Y > Coordinates.Y)
-        {
-            return false;
-        }
-
-        if (cell.Coordinates.X > Coordinates.X &&
-            cell.Coordinates.X <= Coordinates.X + distance &&
-            cell.Coordinates.Y == Coordinates.Y)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.X < Coordinates.X &&
-            cell.Coordinates.X >= Coordinates.X - distance &&
-            cell.Coordinates.Y == Coordinates.Y)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y > Coordinates.Y &&
-            cell.Coordinates.Y <= Coordinates.Y + distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y < Coordinates.Y &&
-            cell.Coordinates.Y >= Coordinates.Y - distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-
-        return false;
+        return Cells.Where(x => neiborgs.Contains(x.Coordinates)).ToArray();
     }
 }

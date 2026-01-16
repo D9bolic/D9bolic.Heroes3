@@ -1,5 +1,5 @@
-﻿using Heroes.Map;
-using Heroes.Map.Assets;
+﻿using Heroes.Assets;
+using Heroes.Map;
 using Heroes.Menu.Interfaces;
 using Heroes.Players;
 using Heroes.Units.Army;
@@ -81,7 +81,7 @@ public class MovementUnitMenuItem : IMenuItem
         }
 
         return _turn.Map
-            .GetCellsInDistance(_turn.ActiveUnit.Coordinates, 1)
+            .GetClosePoints(_turn.ActiveUnit.Coordinates)
             .Where(i => !obstacles.Contains(i.Coordinates))
             .ToArray();
     }

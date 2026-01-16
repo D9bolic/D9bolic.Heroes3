@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Security.Cryptography;
+using Heroes.Assets;
 using Heroes.Map;
-using Heroes.Map.Assets;
 using Heroes.Units.Army.Attack;
 using Heroes.Units.Effects;
 using Heroes.Utils;

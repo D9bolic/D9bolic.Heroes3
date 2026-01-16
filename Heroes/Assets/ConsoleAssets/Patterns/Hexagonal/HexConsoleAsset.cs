@@ -1,6 +1,6 @@
-﻿using Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿using Heroes.Assets.ConsoleAssets.Assets;
 
-namespace Heroes.Map.Assets.ConsoleAssets.Patterns.Hexagonal;
+namespace Heroes.Assets.ConsoleAssets.Patterns.Hexagonal;
 
 public class HexConsoleAsset(ConsoleAsset asset)
     : ConsoleAssetBase, IAsset
@@ -15,15 +15,19 @@ public class HexConsoleAsset(ConsoleAsset asset)
         var origCol = System.Console.CursorLeft;
 
 
-        System.Console.Write("/─\\");
+        System.Console.Write("  ─  ");
         SetCursorPosition(origCol, origRow + 1);
-        System.Console.Write($"│");
-        asset.Draw();
-        System.Console.Write($"│");
-
+        System.Console.Write("/   \\");
         SetCursorPosition(origCol, origRow + 2);
-        System.Console.Write("\\─/");
+        System.Console.Write($"  ");
+        asset.Draw();
+        System.Console.Write($"  ");
+
+        SetCursorPosition(origCol, origRow + 3);
+        System.Console.Write("\\   /");
+        SetCursorPosition(origCol, origRow + 4);
+        System.Console.Write("  ─  ");
         
-        SetCursorPosition(origCol + 3, origRow);
+        SetCursorPosition(origCol + 8, origRow);
     }
 }

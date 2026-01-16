@@ -10,7 +10,7 @@ public class Griffin : UnitBase
         StateLine = new UnitStateLine
         {
             Initiative = 6,
-            Speed = 3,
+            Speed = 6,
             Attack = 8,
             Defence = 8,
             HitPoints = 25,

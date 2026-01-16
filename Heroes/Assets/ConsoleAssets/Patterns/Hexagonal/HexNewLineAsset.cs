@@ -1,6 +1,6 @@
-﻿using Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿using Heroes.Assets.ConsoleAssets.Assets;
 
-namespace Heroes.Map.Assets.ConsoleAssets.Patterns.Hexagonal;
+namespace Heroes.Assets.ConsoleAssets.Patterns.Hexagonal;
 
 public class HexNewLineAsset() : ConsoleAssetBase, IAsset
 {

@@ -20,7 +20,7 @@ public class DistanceAttackPattern : AttackPatternBase, IAttackPattern
     public void Attack(IMap map, IUnit enemy)
     {
         var cells = map
-            .GetCellsInDistance(_unit.Coordinates, 1)
+            .GetClosePoints(_unit.Coordinates)
             .Select(x => x.Coordinates)
             .ToArray();
         if (cells.Contains(_unit.Coordinates))

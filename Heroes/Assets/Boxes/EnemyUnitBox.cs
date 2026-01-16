@@ -1,4 +1,4 @@
-﻿namespace Heroes.Map.Assets.Boxes;
+﻿namespace Heroes.Assets.Boxes;
 
 public class EnemyUnitBox(IMapItem item) : WrapperBase(item)
 {

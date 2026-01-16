@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
+using Heroes.Assets;
 using Heroes.Map;
-using Heroes.Map.Assets;
 using Heroes.Map.Landscape;
 using Heroes.Units.Army;
 

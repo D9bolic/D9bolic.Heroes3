@@ -1,4 +1,4 @@
-﻿using Heroes.Map.Assets;
+﻿using Heroes.Assets;
 using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Hex;
@@ -53,24 +53,43 @@ public class HexMap : IMap
             if (row >= _rows - 1)
             {
                 _assetsStore.GetAsset(_newLineItem).Draw();
+                _assetsStore.GetAsset(_newLineItem).Draw();
             }
         }
     }
 
-    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance)
+    public IEnumerable<IMapItem> GetClosePoints(Point point)
     {
-        var result = new List<IMapItem>();
-        foreach (var cell in Cells)
-        {
-            if (IsInDistance(cell, point, distance))
-            {
-                result.Add(cell);
-            }
-        }
-
-        return result;
+        var neighbors = GetNeighbors(point);
+        return Cells.Where(x => neighbors.Contains(x.Coordinates)).ToArray();
     }
 
+    public static List<Point> GetNeighbors(Point hex) {
+        List<Point> neighbors = new List<Point>();
+        int q = hex.X;
+        int r = hex.Y;
+
+        // Define neighbor offsets based on row parity (odd-r example)
+        int[][] neighborOffsets;
+        if (r % 2 == 1) { // Odd row
+            neighborOffsets = new int[][] {
+                new int[] {+1, 0}, new int[] {+1, -1}, new int[] {0, -1},
+                new int[] {-1, 0}, new int[] {0, +1}, new int[] {-1, +1}
+            };
+        } else { // Even row
+            neighborOffsets = new int[][] {
+                new int[] {+1, 0}, new int[] {+1, +1}, new int[] {0, +1},
+                new int[] {-1, 0}, new int[] {0, -1}, new int[] {-1, -1}
+            };
+        }
+
+        foreach (var offset in neighborOffsets) {
+            neighbors.Add(new Point { X = q + offset[0], Y = r + offset[1] });
+        }
+        
+        return neighbors;
+    }
+    
     public static bool IsInDistance(IMapItem cell, Point Coordinates, int distance)
     {
         if (cell.Coordinates.X > Coordinates.X && cell.Coordinates.Y > Coordinates.Y)

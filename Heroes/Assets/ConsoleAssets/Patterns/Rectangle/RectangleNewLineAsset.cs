@@ -1,6 +1,6 @@
-﻿using Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿using Heroes.Assets.ConsoleAssets.Assets;
 
-namespace Heroes.Map.Assets.ConsoleAssets.Patterns.Rectangle;
+namespace Heroes.Assets.ConsoleAssets.Patterns.Rectangle;
 
 public class RectangleNewLineAsset() : ConsoleAssetBase, IAsset
 {

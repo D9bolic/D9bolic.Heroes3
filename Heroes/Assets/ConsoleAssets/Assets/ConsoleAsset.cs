@@ -1,4 +1,4 @@
-﻿namespace Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿namespace Heroes.Assets.ConsoleAssets.Assets;
 
 public class ConsoleAsset(ConsoleColor TextColor, ConsoleColor BackgroundColor, string Literal)
     : ConsoleAssetBase, IAsset

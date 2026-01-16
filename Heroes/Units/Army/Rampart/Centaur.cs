@@ -10,8 +10,8 @@ public class Centaur : UnitBase
     {
         StateLine = new UnitStateLine
         {
-            Initiative = 1,
-            Speed = 2,
+            Initiative = 6,
+            Speed = 6,
             Attack = 5,
             Defence = 3,
             HitPoints = 8,

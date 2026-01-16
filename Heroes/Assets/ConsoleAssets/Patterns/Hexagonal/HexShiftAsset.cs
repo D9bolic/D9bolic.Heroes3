@@ -1,6 +1,6 @@
-﻿using Heroes.Map.Assets.ConsoleAssets.Assets;
+﻿using Heroes.Assets.ConsoleAssets.Assets;
 
-namespace Heroes.Map.Assets.ConsoleAssets.Patterns.Hexagonal;
+namespace Heroes.Assets.ConsoleAssets.Patterns.Hexagonal;
 
 public class HexShiftAsset() : ConsoleAssetBase, IAsset
 {
@@ -9,7 +9,7 @@ public class HexShiftAsset() : ConsoleAssetBase, IAsset
         var origRow = System.Console.CursorTop;
         var origCol = System.Console.CursorLeft;
 
-        SetCursorPosition(origCol + 2, origRow);
+        SetCursorPosition(origCol + 4, origRow);
     }
 }
 

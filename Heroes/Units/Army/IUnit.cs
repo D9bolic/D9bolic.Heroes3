@@ -1,5 +1,5 @@
-﻿using Heroes.Map;
-using Heroes.Map.Assets;
+﻿using Heroes.Assets;
+using Heroes.Map;
 using Heroes.Units.Army.Attack;
 using Heroes.Units.Effects;
 

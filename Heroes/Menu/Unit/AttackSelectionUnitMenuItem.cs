@@ -1,6 +1,6 @@
-﻿using Heroes.Map;
-using Heroes.Map.Assets;
-using Heroes.Map.Assets.Boxes;
+﻿using Heroes.Assets;
+using Heroes.Assets.Boxes;
+using Heroes.Map;
 using Heroes.Menu.Interfaces;
 using Heroes.Units.Army;
 

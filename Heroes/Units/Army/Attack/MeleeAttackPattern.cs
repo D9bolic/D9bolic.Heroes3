@@ -26,7 +26,7 @@ public class MeleeAttackPattern : AttackPatternBase, IAttackPattern
     public IEnumerable<IUnit> GetTargets(IMap map, IEnumerable<IUnit> enemies)
     {
         var cells = map
-            .GetCellsInDistance(_unit.Coordinates, 1)
+            .GetClosePoints(_unit.Coordinates)
             .Select(x => x.Coordinates)
             .ToArray();
         return enemies

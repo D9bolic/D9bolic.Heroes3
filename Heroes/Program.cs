@@ -2,10 +2,10 @@
 
 using System.Drawing;
 using System.Reflection;
+using Heroes.Assets.ConsoleAssets;
+using Heroes.Assets.ConsoleAssets.Patterns.Hexagonal;
+using Heroes.Assets.ConsoleAssets.Patterns.Rectangle;
 using Heroes.Map;
-using Heroes.Map.Assets.ConsoleAssets;
-using Heroes.Map.Assets.ConsoleAssets.Patterns.Hexagonal;
-using Heroes.Map.Assets.ConsoleAssets.Patterns.Rectangle;
 using Heroes.Map.Hex;
 using Heroes.Map.Rectangle;
 using Heroes.Menu;
@@ -21,14 +21,14 @@ using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var assetStore = new ConsoleAssetsStore(new RectanglePattern());
-var map = new RectangleMap(5,3, assetStore);
+var assetStore = new ConsoleAssetsStore(new HexPattern());
+var map = new HexMap(10,4, assetStore);
 
 var menuFactory = new ConsoleMenuFactory();
 
 var player1 = SetupPlayer1();
 var player2 = SetupPlayer2();
-var obstacles = map.GenerateRandomObstacles(2, player1.Army.Union(player2.Army).ToArray());
+var obstacles = map.GenerateRandomObstacles(2, player1.Army.Concat(player2.Army).ToArray());
 
 var tracker = new InitiativeTracker(player1, player2, map, obstacles);
 foreach (var turn in tracker)
@@ -77,8 +77,8 @@ IPlayer SetupPlayer2()
         Hero = new Clancy(),
     };
     
-    player.Army.Add(new Elf(new Point(4, 0)));
-    player.Army.Add(new Centaur(new Point(4, 2)));
+    player.Army.Add(new Elf(new Point(9, 0)));
+    player.Army.Add(new Centaur(new Point(9, 2)));
     
     return player;
 }
