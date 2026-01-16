@@ -3,6 +3,10 @@
 public class ConsoleAsset(ConsoleColor TextColor, ConsoleColor BackgroundColor, string Literal)
     : ConsoleAssetBase, IAsset
 {
+    public ConsoleColor TextColor { get; } = TextColor;
+    public ConsoleColor BackgroundColor { get; } =  BackgroundColor;
+    public string Literal { get; } =  Literal;
+
     public void Draw()
     {
         var originBackground = System.Console.BackgroundColor;

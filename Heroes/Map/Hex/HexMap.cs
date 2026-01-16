@@ -71,15 +71,24 @@ public class HexMap : IMap
 
         // Define neighbor offsets based on row parity (odd-r example)
         int[][] neighborOffsets;
-        if (r % 2 == 1) { // Odd row
+        if (r % 2 == 1) { 
+            // Even row
             neighborOffsets = new int[][] {
-                new int[] {+1, 0}, new int[] {+1, -1}, new int[] {0, -1},
-                new int[] {-1, 0}, new int[] {0, +1}, new int[] {-1, +1}
+                new int[] {+1, 0},
+                new int[] {-1, 0}, 
+                new int[] {0, +1}, 
+                new int[] {0, -1}, 
+                new int[] {+1, +1}, 
+                new int[] {+1, -1}
             };
-        } else { // Even row
+        } else { // Odd row
             neighborOffsets = new int[][] {
-                new int[] {+1, 0}, new int[] {+1, +1}, new int[] {0, +1},
-                new int[] {-1, 0}, new int[] {0, -1}, new int[] {-1, -1}
+                new int[] {+1, 0},
+                new int[] {-1, 0}, 
+                new int[] {0, +1}, 
+                new int[] {0, -1}, 
+                new int[] {-1, +1}, 
+                new int[] {-1, -1}
             };
         }
 
@@ -88,43 +97,5 @@ public class HexMap : IMap
         }
         
         return neighbors;
-    }
-    
-    public static bool IsInDistance(IMapItem cell, Point Coordinates, int distance)
-    {
-        if (cell.Coordinates.X > Coordinates.X && cell.Coordinates.Y > Coordinates.Y)
-        {
-            return false;
-        }
-
-        if (cell.Coordinates.X > Coordinates.X &&
-            cell.Coordinates.X <= Coordinates.X + distance &&
-            cell.Coordinates.Y == Coordinates.Y)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.X < Coordinates.X &&
-            cell.Coordinates.X >= Coordinates.X - distance &&
-            cell.Coordinates.Y == Coordinates.Y)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y > Coordinates.Y &&
-            cell.Coordinates.Y <= Coordinates.Y + distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y < Coordinates.Y &&
-            cell.Coordinates.Y >= Coordinates.Y - distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-
-        return false;
     }
 }
