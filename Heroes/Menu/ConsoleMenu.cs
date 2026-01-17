@@ -18,7 +18,7 @@ public class ConsoleMenu : IMenu
         _menuBreaker = menuBreaker;
     }
 
-    public void Render(TurnInformation turnInformationProvider)
+    public void Render()
     {
         Console.Clear();
         Console.WriteLine("\x1b[3J");
@@ -34,7 +34,7 @@ public class ConsoleMenu : IMenu
                 }).ToArray();
 
             var extra = items.SelectMany(x => x.ExtraObjects);
-            _turnInformation.Map.Draw(extra.Union(turnInformationProvider.Elements, MapItemsComparer.Instance));
+            _turnInformation.Map.Draw(extra.Union(_turnInformation.Elements, MapItemsComparer.Instance));
             foreach (var item in indexedItems)
             {
                 Console.WriteLine($"{item.Number}) {item.UnitMenuItem.Render()}");

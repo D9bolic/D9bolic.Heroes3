@@ -21,16 +21,16 @@ using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var assetStore = new ConsoleAssetsStore(new HexPattern());
-var map = new HexMap(10,4, assetStore);
+var assetStore = new ConsoleAssetsStore(new RectanglePattern());
+var map = new RectangleMap(10,4, assetStore);
 
 var menuFactory = new ConsoleMenuFactory();
 
 var player1 = SetupPlayer1();
 var player2 = SetupPlayer2();
 var obstacles = map.GenerateRandomObstacles(2, player1.Army.Concat(player2.Army).ToArray());
-
-var tracker = new InitiativeTracker(player1, player2, map, obstacles);
+map.InitializeLandscape(obstacles);
+var tracker = new InitiativeTracker(player1, player2, map);
 foreach (var turn in tracker)
 {
     if (turn.Player.CheckLoose())
@@ -50,7 +50,7 @@ foreach (var turn in tracker)
         new AttackUnitMenuItem(turn, menuFactory, menuBreaker),
         new DefenceMenuItem(turn, menuBreaker));
 
-    menu.Render(turn);
+    menu.Render();
 }
 
 IPlayer SetupPlayer1()

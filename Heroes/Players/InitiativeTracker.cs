@@ -12,15 +12,13 @@ public class InitiativeTracker : IInitiativeTracker
     private readonly IPlayer _player1;
     private readonly IPlayer _player2;
     private readonly IMap _map;
-    private readonly IEnumerable<ILandscape> _obstacles;
     private readonly IEnumerable<CurrentTurn> _units;
 
-    public InitiativeTracker(IPlayer player1, IPlayer player2, IMap map, IEnumerable<ILandscape> obstacles)
+    public InitiativeTracker(IPlayer player1, IPlayer player2, IMap map)
     {
         _player1 = player1;
         _player2 = player2;
         _map = map;
-        _obstacles = obstacles;
         _units = _player1.Army.Select(u => new CurrentTurn(u, _player1))
             .Concat(_player2.Army.Select(u => new CurrentTurn(u, _player2)))
             .OrderBy(x => x.Unit.StateLine.Initiative).ToArray();
@@ -44,7 +42,6 @@ public class InitiativeTracker : IInitiativeTracker
                 Map = _map,
                 Allies = turn.Player.Army.Where(x => !x.IsDead()).ToArray(),
                 Enemies = enemyPlayer.Army.Where(x => !x.IsDead()).ToArray(),
-                Obstacles = _obstacles,
             };
 
             if (i == _units.Count() - 1)

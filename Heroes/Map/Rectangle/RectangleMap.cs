@@ -1,4 +1,6 @@
 ﻿using Heroes.Assets;
+using Heroes.Map.Hex;
+using Heroes.Map.Landscape;
 using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;
@@ -7,9 +9,18 @@ public class RectangleMap : IMap
 {
     private readonly int _columns;
     private readonly int _rows;
-    private readonly List<RectangleCell> _cells = new List<RectangleCell>();
+    private readonly List<ILandscape> _cells = new List<ILandscape>();
     private readonly IAssetsStore _assetsStore;
     private readonly IDrawableItem _newLineItem = new NewLineItem();
+
+    private readonly IEnumerable<(string Direction, Point Coordinates)> _neighborOffsets = new
+        (string direction, Point coordinates)[]
+        {
+            new("right", new Point(+1, 0)),
+            new("up", new Point(0, -1)),
+            new("left", new Point(-1, 0)),
+            new("down", new Point(0, +1)),
+        };
 
     public RectangleMap(int columns, int rows, IAssetsStore assetsStore)
     {
@@ -21,12 +32,12 @@ public class RectangleMap : IMap
         {
             for (var column = 0; column < _columns; column++)
             {
-                _cells.Add(new RectangleCell(new Point(column, row)));
+                _cells.Add(new EmptyCell(new Point(column, row)));
             }
         }
     }
 
-    public IEnumerable<IMapItem> Cells => _cells;
+    public IEnumerable<ILandscape> Cells => _cells;
 
     public void Draw(IEnumerable<IMapItem> mapItems)
     {
@@ -49,20 +60,41 @@ public class RectangleMap : IMap
 
     public IEnumerable<IMapItem> GetClosePoints(Point point)
     {
-        int q = point.X;
-        int r = point.Y;
-        List<Point> neiborgs = new List<Point>();
-        var neighborOffsets = new int[][]
+        var neiborgs = new HashSet<Point>();
+        foreach (var offset in _neighborOffsets)
         {
-            new int[] {+1, 0}, new int[] {0, -1},
-            new int[] {-1, 0}, new int[] {0, +1},
-        };
-
-        foreach (var offset in neighborOffsets)
-        {
-            neiborgs.Add(new Point {X = q + offset[0], Y = r + offset[1]});
+            neiborgs.Add(new Point
+            {
+                X = point.X + offset.Coordinates.X,
+                Y = point.Y + offset.Coordinates.Y
+            });
         }
 
         return Cells.Where(x => neiborgs.Contains(x.Coordinates)).ToArray();
+    }
+
+    public void InitializeLandscape(IEnumerable<ILandscape> landscapes)
+    {
+        var query = from cell in _cells
+            join landscale in landscapes on cell.Coordinates equals landscale.Coordinates
+            select new
+            {
+                Landscape = landscale,
+                Index = _cells.IndexOf(cell),
+            };
+
+        foreach (var cell in query.ToArray())
+        {
+            _cells[cell.Index] = cell.Landscape;
+        }
+    }
+
+    public string GetDirection(Point from, Point to)
+    {
+        var direction = _neighborOffsets
+            .FirstOrDefault(o => o.Coordinates.X + from.X == to.X &&
+                                 o.Coordinates.Y + from.Y == to.Y)
+            .Direction;
+        return string.IsNullOrEmpty(direction) ? $"{to.X}, {to.Y}" : direction;
     }
 }

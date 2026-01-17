@@ -1,4 +1,5 @@
 ﻿using Heroes.Assets;
+using Heroes.Map.Landscape;
 using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Hex;
@@ -7,10 +8,33 @@ public class HexMap : IMap
 {
     private readonly int _columns;
     private readonly int _rows;
-    private readonly List<HexCell> _cells = new List<HexCell>();
+    private readonly List<ILandscape> _cells = new List<ILandscape>();
     private readonly IAssetsStore _assetsStore;
     private readonly IDrawableItem _newLineItem = new NewLineItem();
     private readonly IDrawableItem _shiftItem = new ShiftItem();
+    private readonly IEnumerable<(string Direction, Point Coordinates)> 
+        _evenNeighborOffsets = new
+        (string direction, Point coordinates)[]
+        {
+            new("right", new Point(+1, 0)),
+            new("left", new Point(-1, 0)),
+            new("down-right", new Point(0, +1)),
+            new("up-left", new Point(0, -1)),
+            new("up-right", new Point(+1, +1)),
+            new("down-right", new Point(+1, -1)),
+        };
+    
+    private readonly IEnumerable<(string Direction, Point Coordinates)> 
+        _oddNeighborOffsets = new
+            (string direction, Point coordinates)[]
+            {
+                new("right", new Point(+1, 0)),
+                new("left", new Point(-1, 0)),
+                new("down-right", new Point(0, +1)),
+                new("up-left", new Point(0, -1)),
+                new("up-right", new Point(-1, -1)),
+                new("down-right", new Point(-1, +1)),
+            };
 
     public HexMap(int columns, int rows, IAssetsStore assetsStore)
     {
@@ -22,12 +46,28 @@ public class HexMap : IMap
         {
             for (var column = 0; column < _columns; column++)
             {
-                _cells.Add(new HexCell(new Point(column, row)));
+                _cells.Add(new EmptyCell(new Point(column, row)));
             }
         }
     }
 
-    public IEnumerable<IMapItem> Cells => _cells;
+    public IEnumerable<ILandscape> Cells => _cells;
+
+    public void InitializeLandscape(IEnumerable<ILandscape> landscapes)
+    {
+        var query = from cell in _cells
+            join landscale in landscapes on cell.Coordinates equals landscale.Coordinates
+            select new
+            {
+                Landscape = landscale,
+                Index = _cells.IndexOf(cell),
+            };
+
+        foreach (var cell in query.ToArray())
+        {
+            _cells[cell.Index] = cell.Landscape;
+        }
+    }
 
     public void Draw(IEnumerable<IMapItem> mapItems)
     {
@@ -59,43 +99,32 @@ public class HexMap : IMap
     }
 
     public IEnumerable<IMapItem> GetClosePoints(Point point)
-    {
-        var neighbors = GetNeighbors(point);
+    {        
+        var offsets = point.Y % 2 == 1
+            ? _evenNeighborOffsets
+            : _oddNeighborOffsets;
+        var neighbors = new HashSet<Point>();
+        foreach (var offset in offsets)
+        {
+            neighbors.Add(new Point
+            {
+                X = point.X + offset.Coordinates.X,
+                Y = point.Y + offset.Coordinates.Y
+            });
+        }
+
         return Cells.Where(x => neighbors.Contains(x.Coordinates)).ToArray();
     }
 
-    public static List<Point> GetNeighbors(Point hex) {
-        List<Point> neighbors = new List<Point>();
-        int q = hex.X;
-        int r = hex.Y;
-
-        // Define neighbor offsets based on row parity (odd-r example)
-        int[][] neighborOffsets;
-        if (r % 2 == 1) { 
-            // Even row
-            neighborOffsets = new int[][] {
-                new int[] {+1, 0},
-                new int[] {-1, 0}, 
-                new int[] {0, +1}, 
-                new int[] {0, -1}, 
-                new int[] {+1, +1}, 
-                new int[] {+1, -1}
-            };
-        } else { // Odd row
-            neighborOffsets = new int[][] {
-                new int[] {+1, 0},
-                new int[] {-1, 0}, 
-                new int[] {0, +1}, 
-                new int[] {0, -1}, 
-                new int[] {-1, +1}, 
-                new int[] {-1, -1}
-            };
-        }
-
-        foreach (var offset in neighborOffsets) {
-            neighbors.Add(new Point { X = q + offset[0], Y = r + offset[1] });
-        }
-        
-        return neighbors;
+    public string GetDirection(Point from, Point to)
+    {
+        var offsets = from.Y % 2 == 1
+            ? _evenNeighborOffsets
+            : _oddNeighborOffsets;
+        var direction = offsets
+            .FirstOrDefault(o => o.Coordinates.X + from.X == to.X &&
+                                 o.Coordinates.Y + from.Y == to.Y)
+            .Direction;
+        return string.IsNullOrEmpty(direction) ? $"{to.X}, {to.Y}" : direction;
     }
 }

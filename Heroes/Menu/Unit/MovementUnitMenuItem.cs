@@ -51,17 +51,10 @@ public class MovementUnitMenuItem : IMenuItem
                 _turn,
                 cells
                     .Select<IMapItem, IMenuItem>(x =>
-                        new MovementCellSelectionMenuItem(x, _turn.ActiveUnit, movementMenuBreaker))
+                        new MovementCellSelectionMenuItem(x, _turn, movementMenuBreaker))
                     .Union([new ExitMenuItem(exitMenuBreaker)])
                     .ToArray());
-            _menu.Render(new TurnInformation()
-            {
-                Allies = _turn.Allies,
-                Enemies = _turn.Enemies,
-                ActiveUnit = _turn.ActiveUnit,
-                Map = _turn.Map,
-                Obstacles = _turn.Obstacles,
-            });
+            _menu.Render();
         }
 
         _menuBreaker.AnyActionInvoked = movementMenuBreaker.ShouldMenuBreak;
@@ -72,17 +65,16 @@ public class MovementUnitMenuItem : IMenuItem
         var obstacles = _turn
             .Allies
             .Union(_turn.Enemies)
+            .OfType<IMapItem>()
+            .Union(_turn.Map.Cells.Where(x => !x.CanMoveInto && !_turn.ActiveUnit.CanFly))
             .Select(o => o.Coordinates)
             .ToList();
-
-        if (!_turn.ActiveUnit.CanFly)
-        {
-            obstacles.AddRange(_turn.Obstacles.Select(x => x.Coordinates));
-        }
 
         return _turn.Map
             .GetClosePoints(_turn.ActiveUnit.Coordinates)
             .Where(i => !obstacles.Contains(i.Coordinates))
+            .OrderBy(x => x.Coordinates.X)
+            .ThenBy(x => x.Coordinates.Y)
             .ToArray();
     }
 }

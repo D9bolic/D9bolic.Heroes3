@@ -17,8 +17,6 @@ public class TurnInformation
 
     public IEnumerable<IUnit> Enemies { get; set; } = new List<IUnit>();
 
-    public IEnumerable<ILandscape> Obstacles { get; set; } = new List<ILandscape>();
-
     public IMap Map { get; set; }
 
     public IEnumerable<IMapItem> Elements
@@ -30,7 +28,6 @@ public class TurnInformation
                     ? new SelectionBox(x)
                     : new AllyUnitBox(x))
                 .Union(Enemies.Select<IUnit, IMapItem>(x => new EnemyUnitBox(x)), MapItemsComparer.Instance)
-                .Union(Obstacles, MapItemsComparer.Instance)
                 .ToArray();
         }
     }

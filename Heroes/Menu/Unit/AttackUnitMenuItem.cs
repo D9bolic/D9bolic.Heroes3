@@ -47,14 +47,7 @@ public class AttackUnitMenuItem : IMenuItem
                 .Union([new ExitMenuItem(exitMenuBreaker)])
                 .ToArray());
         
-        _menu.Render(new TurnInformation()
-        {
-            Allies = _turn.Allies,
-            Enemies = _turn.Enemies,
-            ActiveUnit = _turn.ActiveUnit,
-            Map = _turn.Map,
-            Obstacles = _turn.Obstacles,
-        });
+        _menu.Render();
     }
     
     private IEnumerable<IUnit> GetEnemiesInAttackRange()

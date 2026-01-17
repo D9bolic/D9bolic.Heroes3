@@ -2,23 +2,23 @@
 using Heroes.Assets.Boxes;
 using Heroes.Map;
 using Heroes.Menu.Interfaces;
+using Heroes.Players;
 using Heroes.Units.Army;
 
 namespace Heroes.Menu.Unit;
 
 public class MovementCellSelectionMenuItem : IMenuItem
 {
+    private readonly TurnInformation _turn;
     private readonly IMenuBreaker _breaker;
 
     public IMapItem Cell { get; }
 
-    public IUnit Unit { get; }
-
-    public MovementCellSelectionMenuItem(IMapItem Cell, IUnit unit, IMenuBreaker breaker)
+    public MovementCellSelectionMenuItem(IMapItem Cell, TurnInformation turn, IMenuBreaker breaker)
     {
+        _turn = turn;
         _breaker = breaker;
         this.Cell = Cell;
-        Unit = unit;
         ExtraObjects = new[] { new SelectionBox(Cell) };
     }
 
@@ -28,37 +28,13 @@ public class MovementCellSelectionMenuItem : IMenuItem
 
     public string Render()
     {
-        if (Cell.Coordinates.X > Unit.Coordinates.X &&
-            Cell.Coordinates.Y == Unit.Coordinates.Y)
-        {
-            return $"Move unit right";
-        }
-
-        if (Cell.Coordinates.X < Unit.Coordinates.X &&
-            Cell.Coordinates.Y == Unit.Coordinates.Y)
-        {
-            return $"Move unit left";
-        }
-
-        if (Cell.Coordinates.X == Unit.Coordinates.X &&
-            Cell.Coordinates.Y < Unit.Coordinates.Y)
-        {
-            return $"Move unit up";
-        }
-
-        if (Cell.Coordinates.X == Unit.Coordinates.X &&
-            Cell.Coordinates.Y > Unit.Coordinates.Y)
-        {
-            return $"Move unit down";
-        }
-
-        return $"Move unit to cell {Cell.Coordinates.X}, {Cell.Coordinates.Y}";
+        return $"Move unit {_turn.Map.GetDirection(_turn.ActiveUnit.Coordinates, Cell.Coordinates)}";
     }
 
     public void Select()
     {
-        Unit.Coordinates = Cell.Coordinates;
-        Unit.MovementLeft--;
+        _turn.ActiveUnit.Coordinates = Cell.Coordinates;
+        _turn.ActiveUnit.MovementLeft--;
         _breaker.ShouldMenuBreak = true;
     }
 }
