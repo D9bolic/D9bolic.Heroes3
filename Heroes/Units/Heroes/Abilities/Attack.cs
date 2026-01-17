@@ -20,7 +20,6 @@ public class Attack : IEffect
             Defence = unitState.Defence,
             Speed = unitState.Speed,
             DamageMax = unitState.DamageMax,
-            AttackRange = unitState.AttackRange,
             DamageMin = unitState.DamageMin,
             HitPoints = unitState.HitPoints,
         };

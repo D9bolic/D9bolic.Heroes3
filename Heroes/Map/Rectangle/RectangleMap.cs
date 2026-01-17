@@ -1,4 +1,7 @@
-﻿using Point = System.Drawing.Point;
+﻿using Heroes.Assets;
+using Heroes.Map.Hex;
+using Heroes.Map.Landscape;
+using Point = System.Drawing.Point;
 
 namespace Heroes.Map.Rectangle;
 
@@ -6,8 +9,18 @@ public class RectangleMap : IMap
 {
     private readonly int _columns;
     private readonly int _rows;
-    private readonly List<RectangleCell> _cells = new List<RectangleCell>();
+    private readonly List<ILandscape> _cells = new List<ILandscape>();
     private readonly IAssetsStore _assetsStore;
+    private readonly IDrawableItem _newLineItem = new NewLineItem();
+
+    private readonly IEnumerable<(string Direction, Point Coordinates)> _neighborOffsets = new
+        (string direction, Point coordinates)[]
+        {
+            new("right", new Point(+1, 0)),
+            new("up", new Point(0, -1)),
+            new("left", new Point(-1, 0)),
+            new("down", new Point(0, +1)),
+        };
 
     public RectangleMap(int columns, int rows, IAssetsStore assetsStore)
     {
@@ -19,12 +32,12 @@ public class RectangleMap : IMap
         {
             for (var column = 0; column < _columns; column++)
             {
-                _cells.Add(new RectangleCell(new Point(column, row)));
+                _cells.Add(new EmptyCell(new Point(column, row)));
             }
         }
     }
 
-    public IEnumerable<IMapItem> Cells => _cells;
+    public IEnumerable<ILandscape> Cells => _cells;
 
     public void Draw(IEnumerable<IMapItem> mapItems)
     {
@@ -37,63 +50,51 @@ public class RectangleMap : IMap
                 var asset = mapItem is null
                     ? _assetsStore.GetAsset(_cells.First(x => x.Coordinates.Equals(coordinate)))
                     : _assetsStore.GetAsset(mapItem);
-                
+
                 asset.Draw();
             }
 
-            _assetsStore.GetAsset(new NewLineItem()).Draw();
+            _assetsStore.GetAsset(_newLineItem).Draw();
         }
     }
 
-    public IEnumerable<IMapItem> GetCellsInDistance(Point point, int distance)
+    public IEnumerable<IMapItem> GetClosePoints(Point point)
     {
-        var result = new List<IMapItem>();
-        foreach (var cell in Cells)
+        var neiborgs = new HashSet<Point>();
+        foreach (var offset in _neighborOffsets)
         {
-            if (IsInDistance(cell, point, distance))
+            neiborgs.Add(new Point
             {
-                result.Add(cell);
-            }
+                X = point.X + offset.Coordinates.X,
+                Y = point.Y + offset.Coordinates.Y
+            });
         }
 
-        return result;
+        return Cells.Where(x => neiborgs.Contains(x.Coordinates)).ToArray();
     }
-    
-    public static bool IsInDistance(IMapItem cell, Point Coordinates, int distance)
+
+    public void InitializeLandscape(IEnumerable<ILandscape> landscapes)
     {
-        if (cell.Coordinates.X > Coordinates.X && cell.Coordinates.Y > Coordinates.Y)
-        {
-            return false;
-        }
+        var query = from cell in _cells
+            join landscale in landscapes on cell.Coordinates equals landscale.Coordinates
+            select new
+            {
+                Landscape = landscale,
+                Index = _cells.IndexOf(cell),
+            };
 
-        if (cell.Coordinates.X > Coordinates.X &&
-            cell.Coordinates.X <= Coordinates.X + distance &&
-            cell.Coordinates.Y == Coordinates.Y)
+        foreach (var cell in query.ToArray())
         {
-            return true;
+            _cells[cell.Index] = cell.Landscape;
         }
+    }
 
-        if (cell.Coordinates.X < Coordinates.X &&
-            cell.Coordinates.X >= Coordinates.X - distance &&
-            cell.Coordinates.Y == Coordinates.Y)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y > Coordinates.Y &&
-            cell.Coordinates.Y <= Coordinates.Y + distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-
-        if (cell.Coordinates.Y < Coordinates.Y &&
-            cell.Coordinates.Y >= Coordinates.Y - distance &&
-            cell.Coordinates.X == Coordinates.X)
-        {
-            return true;
-        }
-        
-        return false;
+    public string GetDirection(Point from, Point to)
+    {
+        var direction = _neighborOffsets
+            .FirstOrDefault(o => o.Coordinates.X + from.X == to.X &&
+                                 o.Coordinates.Y + from.Y == to.Y)
+            .Direction;
+        return string.IsNullOrEmpty(direction) ? $"{to.X}, {to.Y}" : direction;
     }
 }

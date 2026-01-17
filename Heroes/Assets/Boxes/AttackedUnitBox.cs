@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using Heroes.Map;
-
-namespace Heroes.Menu.Unit;
+﻿namespace Heroes.Assets.Boxes;
 
 public class AttackedUnitBox(IMapItem item) : WrapperBase(item)
 {

@@ -1,4 +1,6 @@
-﻿using Heroes.Map;
+﻿using Heroes.Assets;
+using Heroes.Map;
+using Heroes.Menu.Interfaces;
 
 namespace Heroes.Menu;
 

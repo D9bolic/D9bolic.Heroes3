@@ -1,4 +1,6 @@
-﻿namespace Heroes.Menu;
+﻿using Heroes.Menu.Interfaces;
+
+namespace Heroes.Menu;
 
 public class MenuBreaker : IMenuBreaker
 {

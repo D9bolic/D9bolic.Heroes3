@@ -1,6 +1,4 @@
-﻿using Heroes.Map;
-
-namespace Heroes.Menu.Unit;
+﻿namespace Heroes.Assets.Boxes;
 
 public class AllyUnitBox(IMapItem item) : WrapperBase(item)
 {

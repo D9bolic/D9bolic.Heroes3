@@ -1,10 +1,11 @@
-﻿using Heroes.Map;
-using Heroes.Menu.Unit;
-using Heroes.Players;
+﻿using Heroes.Assets;
+using Heroes.Assets.Boxes;
+using Heroes.Map;
+using Heroes.Map.Landscape;
 using Heroes.Units.Army;
 using Heroes.Utils;
 
-namespace Heroes.Menu;
+namespace Heroes.Players;
 
 public class TurnInformation
 {
@@ -15,8 +16,6 @@ public class TurnInformation
     public IEnumerable<IUnit> Allies { get; set; } = new List<IUnit>();
 
     public IEnumerable<IUnit> Enemies { get; set; } = new List<IUnit>();
-
-    public IEnumerable<IMapItem> Obstacles { get; set; } = new List<IMapItem>();
 
     public IMap Map { get; set; }
 
@@ -29,7 +28,6 @@ public class TurnInformation
                     ? new SelectionBox(x)
                     : new AllyUnitBox(x))
                 .Union(Enemies.Select<IUnit, IMapItem>(x => new EnemyUnitBox(x)), MapItemsComparer.Instance)
-                .Union(Obstacles, MapItemsComparer.Instance)
                 .ToArray();
         }
     }

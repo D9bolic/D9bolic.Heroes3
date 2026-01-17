@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using Heroes.Map;
-
-namespace Heroes.Menu.Unit;
+﻿namespace Heroes.Assets.Boxes;
 
 public class SelectionBox(IMapItem item) : WrapperBase(item)
 {

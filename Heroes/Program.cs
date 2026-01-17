@@ -2,29 +2,35 @@
 
 using System.Drawing;
 using System.Reflection;
+using Heroes.Assets.ConsoleAssets;
+using Heroes.Assets.ConsoleAssets.Patterns.Hexagonal;
+using Heroes.Assets.ConsoleAssets.Patterns.Rectangle;
 using Heroes.Map;
+using Heroes.Map.Hex;
 using Heroes.Map.Rectangle;
 using Heroes.Menu;
+using Heroes.Menu.Interfaces;
 using Heroes.Menu.Unit;
 using Heroes.Players;
 using Heroes.Units.Army;
 using Heroes.Units.Army.Castle;
 using Heroes.Units.Army.Rampart;
-using Heroes.Units.Heroes.Castle;
+using Heroes.Units.Heroes.Castle.Knight;
+using Heroes.Units.Heroes.Rampart.Ranger;
 using Heroes.Utils;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var assetStore = new ConsoleAssetsStore(new RectanglePattern());
-var map = new RectangleMap(5,3, assetStore);
+var map = new RectangleMap(10,4, assetStore);
 
 var menuFactory = new ConsoleMenuFactory();
 
 var player1 = SetupPlayer1();
 var player2 = SetupPlayer2();
-var obstacles = map.GenerateRandomObstacles(2, player1.Army.Union(player2.Army).ToArray());
-
-var tracker = new InitiativeTracker(player1, player2, map, obstacles);
+var obstacles = map.GenerateRandomObstacles(2, player1.Army.Concat(player2.Army).ToArray());
+map.InitializeLandscape(obstacles);
+var tracker = new InitiativeTracker(player1, player2, map);
 foreach (var turn in tracker)
 {
     if (turn.Player.CheckLoose())
@@ -44,7 +50,7 @@ foreach (var turn in tracker)
         new AttackUnitMenuItem(turn, menuFactory, menuBreaker),
         new DefenceMenuItem(turn, menuBreaker));
 
-    menu.Render(turn);
+    menu.Render();
 }
 
 IPlayer SetupPlayer1()
@@ -71,8 +77,8 @@ IPlayer SetupPlayer2()
         Hero = new Clancy(),
     };
     
-    player.Army.Add(new Elf(new Point(4, 0)));
-    player.Army.Add(new Centaur(new Point(4, 2)));
+    player.Army.Add(new Elf(new Point(9, 0)));
+    player.Army.Add(new Centaur(new Point(9, 2)));
     
     return player;
 }

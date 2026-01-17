@@ -1,6 +1,4 @@
-﻿using Heroes.Map;
-
-namespace Heroes.Menu.Unit;
+﻿namespace Heroes.Assets.Boxes;
 
 public interface IWrapper : IMapItem
 {

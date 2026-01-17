@@ -3,7 +3,7 @@ using Heroes.Units.Heroes.Abilities;
 using Heroes.Units.Heroes.Spells;
 using Defence = Heroes.Units.Heroes.Abilities.Defence;
 
-namespace Heroes.Units.Heroes.Castle;
+namespace Heroes.Units.Heroes.Rampart.Ranger;
 
 public class Clancy : IHero
 {

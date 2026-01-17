@@ -1,4 +1,4 @@
-﻿namespace Heroes.Map;
+﻿namespace Heroes.Assets;
 
 public interface IAssetsStore
 {
