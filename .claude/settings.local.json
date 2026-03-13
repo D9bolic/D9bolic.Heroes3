@@ -1,0 +1,25 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet new classlib -n Heroes.Core -f net10.0 --no-restore 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet new classlib -n Heroes.Console -f net10.0 --no-restore 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet new console -n Heroes.App.Console -f net10.0 --no-restore 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet sln Heroes.sln add Heroes.Core/Heroes.Core.csproj Heroes.Console/Heroes.Console.csproj Heroes.App.Console/Heroes.App.Console.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet add Heroes.Console/Heroes.Console.csproj reference Heroes.Core/Heroes.Core.csproj 2>&1 && dotnet add Heroes.App.Console/Heroes.App.Console.csproj reference Heroes.Core/Heroes.Core.csproj Heroes.Console/Heroes.Console.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet build Heroes.Core/Heroes.Core.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet build Heroes.Console/Heroes.Console.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet build Heroes.App.Console/Heroes.App.Console.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet build Heroes.sln 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet sln Heroes.sln remove Heroes/Heroes.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet new classlib -n Heroes.Battle -f net10.0 --no-restore 2>&1 && dotnet sln Heroes.sln add Heroes.Battle/Heroes.Battle.csproj 2>&1 && dotnet add Heroes.Battle/Heroes.Battle.csproj reference Heroes.Core/Heroes.Core.csproj 2>&1 && rm Heroes.Battle/Class1.cs 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && cp Heroes.Core/Players/*.cs Heroes.Battle/Players/ && cp Heroes.Core/Units/Army/*.cs Heroes.Battle/Units/Army/ && cp Heroes.Core/Units/Army/Attack/*.cs Heroes.Battle/Units/Army/Attack/ && cp Heroes.Core/Units/Army/Castle/*.cs Heroes.Battle/Units/Army/Castle/ && cp Heroes.Core/Units/Army/Rampart/*.cs Heroes.Battle/Units/Army/Rampart/ && cp Heroes.Core/Units/Effects/*.cs Heroes.Battle/Units/Effects/ && cp Heroes.Core/Menu/Unit/*.cs Heroes.Battle/Menu/Unit/ 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet add Heroes.App.Console/Heroes.App.Console.csproj reference Heroes.Battle/Heroes.Battle.csproj 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && rm -rf Heroes.Core/Players Heroes.Core/Units/Army Heroes.Core/Units/Effects Heroes.Core/Menu/Unit 2>&1)",
+      "Bash(cd \"D:/Projects/My/D9bolic.Heroes3/D9bolic.Heroes3\" && dotnet build Heroes.Battle/Heroes.Battle.csproj 2>&1)",
+      "Bash(cd \"D:\\\\Projects\\\\My\\\\D9bolic.Heroes3\\\\D9bolic.Heroes3\" && dotnet build Heroes.sln 2>&1)"
+    ]
+  }
+}
