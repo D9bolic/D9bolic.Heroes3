@@ -1,0 +1,15 @@
+{
+  "$schema": "../../schemas/hero.schema.json",
+  "id": "clancy",
+  "name": "Clancy",
+  "factionId": "rampart",
+  "classId": "ranger",
+  "stateLine": {
+    "attack": 1,
+    "defence": 3,
+    "wisdom": 1,
+    "power": 1
+  },
+  "startingSpells": [],
+  "abilities": []
+}
