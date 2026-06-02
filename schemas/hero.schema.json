@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d9bolic.local/schemas/hero.schema.json",
+  "title": "Hero",
+  "description": "Canonical definition of a hero consumed by the engine. Mirrors `IHero` (Heroes.Core/Units/Heroes/IHero.cs) plus the metadata needed by JSON-driven catalogs (factionId) and the image asset store (imagePath).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "factionId", "stateLine"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable, unique identifier for this hero (kebab-case). Used as the catalog key.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name (matches `IHero.Name` in the engine).",
+      "minLength": 1
+    },
+    "factionId": {
+      "type": "string",
+      "description": "Identifier of the faction this hero belongs to, e.g. 'castle' or 'rampart'. Reflects the faction folder hardcoded heroes live under in Heroes.Core/Units/Heroes/<Faction>/<Class>/.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "classId": {
+      "type": "string",
+      "description": "Identifier of the hero class within the faction, e.g. 'knight' or 'ranger'. Reflects the class folder hardcoded heroes live under in Heroes.Core/Units/Heroes/<Faction>/<Class>/. Optional.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "stateLine": {
+      "type": "object",
+      "description": "Base hero stats. Mirrors `HeroStateLine` (Heroes.Core/Units/Heroes/HeroStateLine.cs); the engine wires these into the Attack and Defence abilities that buff allied units in battle.",
+      "additionalProperties": false,
+      "required": ["attack", "defence", "wisdom", "power"],
+      "properties": {
+        "attack": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Bonus added to allied unit attack during battle (`HeroStateLine.Attack`)."
+        },
+        "defence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Bonus added to allied unit defence during battle (`HeroStateLine.Defence`)."
+        },
+        "wisdom": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Determines learnable spell tier and starting mana — engine sets initial Mana = wisdom * 10 unless `mana` is overridden."
+        },
+        "power": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Determines spell potency (`HeroStateLine.Power`)."
+        }
+      }
+    },
+    "mana": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Starting mana points (`IHero.Mana`). Optional — when omitted the engine derives it from `stateLine.wisdom * 10`, matching current hardcoded hero behavior."
+    },
+    "startingSpells": {
+      "type": "array",
+      "description": "Ids of spells the hero starts with in their spell book (`IHero.SpellBook`). Currently all hardcoded heroes start with an empty list; reserved for future spell catalogs.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "abilities": {
+      "type": "array",
+      "description": "Ids of extra abilities/specialties beyond the default Attack and Defence stat-bonus abilities every hero gets automatically (see Christian.cs / Clancy.cs). Reserved for hero specialties — empty for the current set.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "imagePath": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Relative path of the hero's portrait asset, resolved through D9bolic.Assets IImageStore. Populated in T8 — heroes may omit this field until image assets are wired up."
+    }
+  }
+}
