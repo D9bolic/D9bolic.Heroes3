@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Heroes.Events;
 using Json.Schema;
@@ -65,8 +66,15 @@ public sealed class UnitCatalog : IUnitCatalog
             }
 
             var json = File.ReadAllText(path);
-            using var document = JsonDocument.Parse(json);
+            var node = JsonNode.Parse(json) as JsonObject
+                ?? throw new InvalidOperationException(
+                    $"Unit file '{fileName}' must be a JSON object.");
 
+            // Editor-only metadata pointing to the schema in source — strip
+            // before validating so additionalProperties: false isn't tripped.
+            node.Remove("$schema");
+
+            using var document = JsonDocument.Parse(node.ToJsonString());
             var validation = schema.Evaluate(document.RootElement, new EvaluationOptions
             {
                 OutputFormat = OutputFormat.List,
@@ -79,7 +87,7 @@ public sealed class UnitCatalog : IUnitCatalog
                     $"Unit file '{fileName}' failed schema validation: {errors}");
             }
 
-            var definition = document.RootElement.Deserialize<UnitDefinition>(JsonOptions)
+            var definition = node.Deserialize<UnitDefinition>(JsonOptions)
                 ?? throw new InvalidOperationException($"Failed to deserialize unit '{fileName}'.");
 
             if (definitions.ContainsKey(definition.Name))
@@ -96,19 +104,22 @@ public sealed class UnitCatalog : IUnitCatalog
 
     private static IEnumerable<string> FlattenErrors(EvaluationResults results)
     {
-        if (results.Errors is { Count: > 0 })
+        if (results.Errors is { } errors && errors.Count > 0)
         {
-            foreach (var error in results.Errors)
+            foreach (var error in errors)
             {
                 yield return $"{results.InstanceLocation} {error.Key}: {error.Value}";
             }
         }
 
-        foreach (var detail in results.Details)
+        if (results.Details is { } details)
         {
-            foreach (var msg in FlattenErrors(detail))
+            foreach (var detail in details)
             {
-                yield return msg;
+                foreach (var msg in FlattenErrors(detail))
+                {
+                    yield return msg;
+                }
             }
         }
     }

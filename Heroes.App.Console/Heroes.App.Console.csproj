@@ -7,6 +7,11 @@
     <ProjectReference Include="..\Heroes.Adventure\Heroes.Adventure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\assets\units\*.json" Link="assets\units\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\schemas\unit.schema.json" Link="schemas\unit.schema.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>

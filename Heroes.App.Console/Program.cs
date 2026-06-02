@@ -16,8 +16,7 @@ using Heroes.Menu;
 using Heroes.Menu.Interfaces;
 using Heroes.Battle.Menu.Unit;
 using Heroes.Battle.Players;
-using Heroes.Battle.Units.Army.Castle;
-using Heroes.Battle.Units.Army.Rampart;
+using Heroes.Battle.Units.Army.Catalog;
 using Heroes.Units.Heroes.Castle.Knight;
 using Heroes.Units.Heroes.Rampart.Ranger;
 using Heroes.Utils;
@@ -31,11 +30,16 @@ var userInteraction = new ConsoleUserInteraction();
 var assetStore = new ConsoleAssetsStore(new RectanglePattern());
 var menuFactory = new ConsoleMenuFactory(assetStore);
 
+var contentRoot = AppContext.BaseDirectory;
+var unitCatalog = UnitCatalog.LoadFromDirectory(
+    Path.Combine(contentRoot, "assets", "units"),
+    Path.Combine(contentRoot, "schemas", "unit.schema.json"));
+
 // === Adventure Phase ===
 RunAdventurePhase(eventBus, menuFactory);
 
 // === Battle Phase ===
-RunBattlePhase(eventBus, menuFactory, userInteraction);
+RunBattlePhase(eventBus, menuFactory, userInteraction, unitCatalog);
 
 void RunAdventurePhase(IGameEventBus bus, IMenuFactory factory)
 {
@@ -114,12 +118,12 @@ void RunAdventurePhase(IGameEventBus bus, IMenuFactory factory)
     }
 }
 
-void RunBattlePhase(IGameEventBus bus, IMenuFactory factory, IUserInteraction interaction)
+void RunBattlePhase(IGameEventBus bus, IMenuFactory factory, IUserInteraction interaction, IUnitCatalog catalog)
 {
     var battleMap = new RectangleMap(10, 4);
 
-    var player1 = SetupBattlePlayer1(bus);
-    var player2 = SetupBattlePlayer2(bus);
+    var player1 = SetupBattlePlayer1(bus, catalog);
+    var player2 = SetupBattlePlayer2(bus, catalog);
     var obstacles = battleMap.GenerateRandomObstacles(2, player1.Army.Concat(player2.Army).ToArray());
     battleMap.InitializeLandscape(obstacles);
     var tracker = new InitiativeTracker(player1, player2, battleMap);
@@ -146,7 +150,7 @@ void RunBattlePhase(IGameEventBus bus, IMenuFactory factory, IUserInteraction in
     }
 }
 
-IPlayer SetupBattlePlayer1(IGameEventBus bus)
+IPlayer SetupBattlePlayer1(IGameEventBus bus, IUnitCatalog catalog)
 {
     var player = new Player(bus)
     {
@@ -154,13 +158,13 @@ IPlayer SetupBattlePlayer1(IGameEventBus bus)
         Hero = new Christian(),
     };
 
-    player.Army.Add(new Pikeman(new Point(0, 0), bus));
-    player.Army.Add(new Griffin(new Point(0, 2), bus));
+    player.Army.Add(catalog.Create("Pikeman", new Point(0, 0), bus));
+    player.Army.Add(catalog.Create("Griffin", new Point(0, 2), bus));
 
     return player;
 }
 
-IPlayer SetupBattlePlayer2(IGameEventBus bus)
+IPlayer SetupBattlePlayer2(IGameEventBus bus, IUnitCatalog catalog)
 {
     var player = new Player(bus)
     {
@@ -168,8 +172,8 @@ IPlayer SetupBattlePlayer2(IGameEventBus bus)
         Hero = new Clancy(),
     };
 
-    player.Army.Add(new Elf(new Point(9, 0), bus));
-    player.Army.Add(new Centaur(new Point(9, 2), bus));
+    player.Army.Add(catalog.Create("Elf", new Point(9, 0), bus));
+    player.Army.Add(catalog.Create("Centaur", new Point(9, 2), bus));
 
     return player;
 }
