@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d9bolic.local/schemas/unit.schema.json",
+  "title": "Unit",
+  "description": "Canonical definition of a Heroes.Battle unit consumed by the engine. Mirrors the data the hardcoded UnitBase subclasses (Pikeman, Griffin, Centaur, Elf) expose: a name, a static UnitStateLine (Initiative/Speed/HitPoints/DamageMin/DamageMax/Attack/Defence), an attack pattern, a CanFly flag, plus the new level (1-7) and optional imagePath. Runtime state (Wounds, CounterAttacks, MovementLeft, LongEffects) is NOT part of the unit definition — it is initialized by the engine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "level",
+    "stateLine",
+    "attackPattern"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the unit (Pikeman, Griffin, Centaur, …). Surfaced in event payloads (UnitActivated, DamageDealt, …) and used as the unit's identity in the renderer."
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 7,
+      "description": "Castle/Rampart-style tier from 1 (weakest) to 7 (strongest). New field — drives recruitment cost tables, dwelling layout, and AI valuation downstream."
+    },
+    "faction": {
+      "type": "string",
+      "enum": ["Castle", "Rampart"],
+      "description": "Faction the unit belongs to. Mirrors the existing namespace split (Heroes.Battle.Units.Army.Castle / Heroes.Battle.Units.Army.Rampart). Optional — orphan units load without a faction."
+    },
+    "canFly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the unit can fly over obstacles. Engine default is false; only Griffin overrides to true (UnitBase.CanFly). Optional — omit for ground-bound units."
+    },
+    "counterAttacks": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Maximum counter-attacks per round. UnitBase.CounterAttacks defaults to 1 and decrements on each CounterAttack call. Optional — omit to inherit the engine default."
+    },
+    "attackPattern": {
+      "type": "string",
+      "enum": ["Melee", "Distance"],
+      "description": "Attack pattern the unit uses. 'Melee' = MeleeAttackPattern (Pikeman, Griffin, Centaur). 'Distance' = DistanceAttackPattern (Elf) — automatically falls back to CloseDistanceAttackPattern with halved damage when an enemy is adjacent."
+    },
+    "stateLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Static UnitStateLine — the seven combat stats on Heroes.Core.Units.Army.UnitStateLine. All values are non-negative integers. Damage range is inclusive on both ends and damageMin must not exceed damageMax.",
+      "required": [
+        "initiative",
+        "speed",
+        "hitPoints",
+        "damageMin",
+        "damageMax",
+        "attack",
+        "defence"
+      ],
+      "properties": {
+        "initiative": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Turn-order weight used by the InitiativeTracker."
+        },
+        "speed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cells the unit can move per round. Copied to MovementLeft on Activate."
+        },
+        "hitPoints": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum hit points. Wounds accumulate against this value; unit dies when Wounds ≥ HitPoints (UnitExtensions.IsDead)."
+        },
+        "damageMin": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Lower bound of the damage roll passed to RandomNumberGenerator.GetInt32 (inclusive)."
+        },
+        "damageMax": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Upper bound of the damage roll (inclusive). Must be ≥ damageMin."
+        },
+        "attack": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Attack stat. (attack - defenderDefence) > 0 multiplies the rolled damage by 1.1 per point of difference (AttackPatternBase.CalculateDamage)."
+        },
+        "defence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Defence stat. Mitigates incoming attack via the same difference rule."
+        }
+      }
+    },
+    "imagePath": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Relative path of the unit's image asset, resolved through D9bolic.Assets IImageStore. Populated in T8 — units may omit this field until image assets are wired up."
+    }
+  }
+}
