@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema;
 
 namespace Heroes.Units.Heroes.Catalog;
@@ -61,8 +62,15 @@ public sealed class HeroCatalog : IHeroCatalog
             }
 
             var json = File.ReadAllText(path);
-            using var document = JsonDocument.Parse(json);
+            var node = JsonNode.Parse(json) as JsonObject
+                ?? throw new InvalidOperationException(
+                    $"Hero file '{fileName}' must be a JSON object.");
 
+            // Editor-only metadata pointing to the schema in source — strip
+            // before validating so additionalProperties: false isn't tripped.
+            node.Remove("$schema");
+
+            using var document = JsonDocument.Parse(node.ToJsonString());
             var validation = schema.Evaluate(document.RootElement, new EvaluationOptions
             {
                 OutputFormat = OutputFormat.List,
@@ -75,7 +83,7 @@ public sealed class HeroCatalog : IHeroCatalog
                     $"Hero file '{fileName}' failed schema validation: {errors}");
             }
 
-            var definition = document.RootElement.Deserialize<HeroDefinition>(JsonOptions)
+            var definition = node.Deserialize<HeroDefinition>(JsonOptions)
                 ?? throw new InvalidOperationException($"Failed to deserialize hero '{fileName}'.");
 
             if (definitions.ContainsKey(definition.Id))

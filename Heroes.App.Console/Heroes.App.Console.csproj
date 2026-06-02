@@ -9,7 +9,9 @@
 
   <ItemGroup>
     <Content Include="..\assets\units\*.json" Link="assets\units\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\assets\heroes\*.json" Link="assets\heroes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\schemas\unit.schema.json" Link="schemas\unit.schema.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\schemas\hero.schema.json" Link="schemas\hero.schema.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <PropertyGroup>
