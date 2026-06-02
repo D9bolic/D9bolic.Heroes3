@@ -1,0 +1,3 @@
+# Local Identity SQLite store — provisioned at startup via EnsureCreated.
+battleweb-identity.db
+battleweb-identity.db-*

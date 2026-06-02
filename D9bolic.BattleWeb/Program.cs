@@ -1,8 +1,8 @@
 using D9bolic.Assets;
+using D9bolic.BattleWeb.Auth;
 using D9bolic.BattleWeb.Components;
 using D9bolic.BattleWeb.Data;
 using D9bolic.BattleWeb.Hubs;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,15 +25,14 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
     })
     .AddEntityFrameworkStores<BattleWebDbContext>()
-    .AddDefaultTokenProviders()
-    .AddDefaultUI();
+    .AddDefaultTokenProviders();
 
 // AddIdentity registers cookie authentication; configure cookie behavior here.
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";
-    options.LogoutPath = "/Identity/Account/Logout";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.LoginPath = "/account/login";
+    options.LogoutPath = "/account/logout";
+    options.AccessDeniedPath = "/account/login";
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.HttpOnly = true;
 });
@@ -54,8 +53,6 @@ if (!string.IsNullOrWhiteSpace(msClientId) && !string.IsNullOrWhiteSpace(msClien
         });
 }
 
-builder.Services.AddRazorPages();
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -75,7 +72,7 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-app.MapRazorPages();
+app.MapAccountEndpoints();
 app.MapHub<BattleHub>("/hubs/battle");
 app.MapImageStore();
 
