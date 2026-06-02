@@ -11,6 +11,12 @@ public sealed class HeroCatalog : IHeroCatalog
         PropertyNameCaseInsensitive = true,
     };
 
+    // Json.Schema's global SchemaRegistry rejects re-registering the same $id;
+    // cache the parsed schema per file so repeated loads (tests, hot reload)
+    // don't trip "Overwriting registered schemas is not permitted."
+    private static readonly Dictionary<string, JsonSchema> SchemaCache = new();
+    private static readonly object SchemaCacheLock = new();
+
     private readonly Dictionary<string, HeroDefinition> _definitions;
 
     private HeroCatalog(Dictionary<string, HeroDefinition> definitions)
@@ -50,7 +56,7 @@ public sealed class HeroCatalog : IHeroCatalog
                 $"Hero schema file '{schemaPath}' does not exist.", schemaPath);
         }
 
-        var schema = JsonSchema.FromFile(schemaPath);
+        var schema = LoadSchemaCached(schemaPath);
         var definitions = new Dictionary<string, HeroDefinition>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var path in Directory.EnumerateFiles(assetsDirectory, "*.json").OrderBy(p => p))
@@ -96,6 +102,20 @@ public sealed class HeroCatalog : IHeroCatalog
         }
 
         return new HeroCatalog(definitions);
+    }
+
+    private static JsonSchema LoadSchemaCached(string schemaPath)
+    {
+        var key = Path.GetFullPath(schemaPath);
+        lock (SchemaCacheLock)
+        {
+            if (!SchemaCache.TryGetValue(key, out var schema))
+            {
+                schema = JsonSchema.FromFile(key);
+                SchemaCache[key] = schema;
+            }
+            return schema;
+        }
     }
 
     private static IEnumerable<string> FlattenErrors(EvaluationResults results)
