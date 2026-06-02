@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/unit.schema.json",
+  "name": "Pikeman",
+  "level": 1,
+  "faction": "Castle",
+  "canFly": false,
+  "counterAttacks": 1,
+  "attackPattern": "Melee",
+  "stateLine": {
+    "initiative": 4,
+    "speed": 4,
+    "hitPoints": 10,
+    "damageMin": 1,
+    "damageMax": 3,
+    "attack": 4,
+    "defence": 5
+  }
+}

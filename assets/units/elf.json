@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/unit.schema.json",
+  "name": "Elf",
+  "level": 3,
+  "faction": "Rampart",
+  "canFly": false,
+  "counterAttacks": 1,
+  "attackPattern": "Distance",
+  "stateLine": {
+    "initiative": 6,
+    "speed": 6,
+    "hitPoints": 15,
+    "damageMin": 3,
+    "damageMax": 5,
+    "attack": 9,
+    "defence": 5
+  }
+}

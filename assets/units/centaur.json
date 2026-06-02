@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/unit.schema.json",
+  "name": "Centaur",
+  "level": 1,
+  "faction": "Rampart",
+  "canFly": false,
+  "counterAttacks": 1,
+  "attackPattern": "Melee",
+  "stateLine": {
+    "initiative": 6,
+    "speed": 6,
+    "hitPoints": 8,
+    "damageMin": 2,
+    "damageMax": 3,
+    "attack": 5,
+    "defence": 3
+  }
+}

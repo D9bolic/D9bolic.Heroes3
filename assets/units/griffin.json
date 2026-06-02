@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/unit.schema.json",
+  "name": "Griffin",
+  "level": 4,
+  "faction": "Castle",
+  "canFly": true,
+  "counterAttacks": 1,
+  "attackPattern": "Melee",
+  "stateLine": {
+    "initiative": 6,
+    "speed": 6,
+    "hitPoints": 25,
+    "damageMin": 3,
+    "damageMax": 6,
+    "attack": 8,
+    "defence": 8
+  }
+}
