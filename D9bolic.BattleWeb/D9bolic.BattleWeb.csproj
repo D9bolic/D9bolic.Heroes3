@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\D9bolic.Assets\D9bolic.Assets.csproj" />
     <ProjectReference Include="..\Heroes.Battle\Heroes.Battle.csproj" />
   </ItemGroup>
 

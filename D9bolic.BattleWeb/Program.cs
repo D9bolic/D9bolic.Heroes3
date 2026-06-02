@@ -1,3 +1,4 @@
+using D9bolic.Assets;
 using D9bolic.BattleWeb.Components;
 using D9bolic.BattleWeb.Hubs;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSignalR();
+builder.Services.AddFilesystemImageStore(builder.Configuration);
 
 var app = builder.Build();
 
@@ -26,5 +28,6 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 app.MapHub<BattleHub>("/hubs/battle");
+app.MapImageStore();
 
 app.Run();

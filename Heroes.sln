@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heroes.Adventure", "Heroes.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D9bolic.BattleWeb", "D9bolic.BattleWeb\D9bolic.BattleWeb.csproj", "{6D7DE627-9327-4148-B0DA-D81AB8604195}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D9bolic.Assets", "D9bolic.Assets\D9bolic.Assets.csproj", "{8458FDBD-AECF-4034-B98F-8FA22A78F261}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,18 @@ Global
 		{6D7DE627-9327-4148-B0DA-D81AB8604195}.Release|x64.Build.0 = Release|Any CPU
 		{6D7DE627-9327-4148-B0DA-D81AB8604195}.Release|x86.ActiveCfg = Release|Any CPU
 		{6D7DE627-9327-4148-B0DA-D81AB8604195}.Release|x86.Build.0 = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|x64.Build.0 = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Debug|x86.Build.0 = Debug|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|x64.ActiveCfg = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|x64.Build.0 = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|x86.ActiveCfg = Release|Any CPU
+		{8458FDBD-AECF-4034-B98F-8FA22A78F261}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
