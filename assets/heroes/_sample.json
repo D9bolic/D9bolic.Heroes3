@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/hero.schema.json",
+  "id": "christian",
+  "name": "Christian",
+  "factionId": "castle",
+  "classId": "knight",
+  "stateLine": {
+    "attack": 2,
+    "defence": 2,
+    "wisdom": 1,
+    "power": 1
+  },
+  "startingSpells": [],
+  "abilities": [],
+  "imagePath": "heroes/castle/christian.png"
+}
